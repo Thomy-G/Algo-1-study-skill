@@ -523,7 +523,21 @@ Let the potential function be $\Phi = t + 2m$, where $t$ is the number of trees 
 
 ### 20.1 Freivalds' One-Sided Error
 *   **Statement:** $\Pr(ABr = Cr) \le 1/2$ if $AB \neq C$.
-*   **Proof:** See detailed proof in Section 7.1. $\blacksquare$
+*   **Proof:**
+    1.  Let $D = A \cdot B - C$. Since $A \cdot B \neq C$, the matrix $D \neq 0$, meaning it contains at least one non-zero entry. Let this non-zero entry be $D_{i,j} \neq 0$ at row $i$ and column $j$.
+    2.  Consider the $i$-th entry of the vector $D \cdot r$:
+        $$(D \cdot r)_i = \sum_{k=1}^n D_{i,k} r_k = D_{i,j} r_j + \sum_{k \neq j} D_{i,k} r_k$$
+    3.  The algorithm returns `True` (incorrectly claiming equality) only if $D \cdot r = \vec{0}$, which requires $(D \cdot r)_i = 0$.
+    4.  Condition on the choices of all random variables $r_k$ for $k \neq j$. Let $S = \sum_{k \neq j} D_{i,k} r_k$ be the sum of these other terms. For $(D \cdot r)_i$ to be zero, we must have:
+        $$D_{i,j} r_j + S = 0 \implies D_{i,j} r_j = -S$$
+    5.  Since $D_{i,j} \neq 0$ and $r_j \in \{0, 1\}$, there is at most *one* value of $r_j$ that satisfies this equation:
+        *   If $S = 0$, then $r_j$ must be 0 (since $D_{i,j} \neq 0$).
+        *   If $S = -D_{i,j}$, then $r_j$ must be 1.
+        *   If $S$ is any other value, no choice of $r_j \in \{0, 1\}$ can satisfy it.
+    6.  Since $r_j$ is chosen uniformly at random from $\{0, 1\}$ independently of the other $r_k$, the probability that $r_j$ takes this unique satisfying value is at most $\frac{1}{2}$.
+    7.  Thus, the probability that $(D \cdot r)_i = 0$ given any fixed choices for all other $r_k$ is at most $\frac{1}{2}$. By the law of total probability, this bounds the overall probability:
+        $$\Pr(D \cdot r = \vec{0}) \le \Pr((D \cdot r)_i = 0) \le \frac{1}{2} \quad \blacksquare$$
+
 
 ### 20.2 Amplification
 *   **Statement:** The error probability after $k$ independent runs is $\le 2^{-k}$.

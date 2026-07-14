@@ -20,26 +20,38 @@ This module compiles the geometric aspects of Linear Programming (LP) in low dim
 
 ### 1. Foundational Vocabulary & Problem Geometry
 
-#### 1.1 Linear Program Definition
+#### 1.1 Geometric Primitives & Definitions
+To understand low-dimensional linear programming and computational geometry, we define the following spatial primitives in $\mathbb{R}^d$:
+
+*   **Hyperplane (על-מישור):** A flat $(d-1)$-dimensional subspace in $\mathbb{R}^d$. Formally, it is the set of points $\vec{x}$ satisfying the linear equation:
+    $$\vec{a} \cdot \vec{x} = b$$
+    where $\vec{a} \in \mathbb{R}^d \setminus \{\vec{0}\}$ is the normal vector, and $b \in \mathbb{R}$. In 2D, a hyperplane is simply a straight line ($ax + by = c$).
+*   **Half-space (חצי מרחב) / Half-plane (חצי מישור):** One of the two regions into which a hyperplane divides space. Formally, a closed half-space is the set of points satisfying a linear inequality:
+    $$\vec{a} \cdot \vec{x} \le b \quad \text{or} \quad \vec{a} \cdot \vec{x} \ge b$$
+    In 2D, this is called a **half-plane**, which is bounded by a 2D line. A constraint in a linear program is geometrically represented as a closed half-space.
+*   **Convexity (קמירות):** A set $S \subseteq \mathbb{R}^d$ is **convex** if, for any two points $p, q \in S$, the entire line segment connecting them lies completely inside $S$:
+    $$\lambda p + (1 - \lambda)q \in S \quad \forall \lambda \in [0, 1]$$
+    *   *Examples:* Polygons, discs, and half-spaces are convex. A bean-like or star shape is non-convex.
+*   **Intersection of Half-spaces:** The intersection of any collection of convex sets is always convex. Since half-spaces are convex, the feasible region of any linear program (which is the intersection of the constraint half-spaces) is a **convex set**.
+*   **Polyhedron (פאון):** A convex set formed by the intersection of a finite number of closed half-spaces.
+*   **Polytope (פוליטופ):** A bounded polyhedron (meaning it does not extend infinitely in any direction, lying entirely within some sphere of finite radius).
+*   **Ray (קרן) / Half-line:** A portion of a line starting at a point $p$ and extending infinitely in a single direction $\vec{v}$:
+    $$\{\vec{p} + \lambda \vec{v} \mid \lambda \ge 0\}$$
+*   **Line Segment (קטע):** The set of points connecting two endpoints $p$ and $q$:
+    $$\{\lambda p + (1 - \lambda)q \mid \lambda \in [0, 1]\}$$
+
+#### 1.2 Linear Program Definition
 A **Linear Program (LP)** is an optimization problem where we seek to maximize (or minimize) a linear objective function subject to a set of linear inequality constraints:
 $$\text{Maximize } \vec{c} \cdot \vec{x} = c_1 x_1 + c_2 x_2 + \dots + c_d x_d$$
 $$\text{Subject to: } a_{i,1} x_1 + \dots + a_{i,d} x_d \le b_i \quad \text{for } i = 1, \dots, n$$
 
-*   **Convexity Definition:** A set $S \subseteq \mathbb{R}^d$ is **convex** if, for any two points $p, q \in S$, the entire line segment connecting them lies completely inside $S$:
-    $$\lambda p + (1 - \lambda)q \in S \quad \forall \lambda \in [0, 1]$$
-    *   *Examples:* Polygons and ovals are convex. A bean-like or star shape is non-convex (as line segments connecting opposing tips can exit the boundary).
-*   **Intersection of Half-Planes Lemma:** The intersection of $n$ half-planes is always a convex set. This intersection can be:
-    1.  *Unbounded* (extends infinitely in some direction).
-    2.  *Bounded* (forms a convex polygon).
-    3.  *A single point* (or line segment).
-    4.  *Empty* (when constraints contradict, meaning the LP is infeasible).
 *   **Feasible Region ($C$):** The intersection of the half-spaces defined by the constraints. Since each half-space is convex, the feasible region is a **convex polytope**.
 *   **Feasible Solution:** Any point $\vec{x}$ lying inside the feasible region $C$.
 *   **Infeasible LP:** An LP where the feasible region is empty ($C = \emptyset$).
 *   **Unbounded LP:** An LP where the objective function can grow infinitely large within the feasible region ($f_{\vec{c}}(\vec{x}) \to \infty$).
 *   **Objective Vector Assumption:** Without loss of generality, we can assume the objective vector $\vec{c}$ points in the negative $y$-direction (equivalent to rotating the coordinate axis system). Our goal is to find the lowest feasible point in the vertical direction.
 
-#### 1.2 Geometrical Classifications of Solutions
+#### 1.3 Geometrical Classifications of Solutions
 For a 2D linear program, the solution fits one of four outcomes:
 1.  **Infeasible:** $C = \emptyset$.
 2.  **Unbounded:** There exists a ray $\rho = \{p + \lambda \vec{d} \mid \lambda > 0\} \subseteq C$ such that $\vec{d} \cdot \vec{c} > 0$.
@@ -48,6 +60,7 @@ For a 2D linear program, the solution fits one of four outcomes:
 
 > [!NOTE]
 > To handle non-unique solutions and guarantee a single well-defined optimal vertex, we enforce a **lexicographical comparison**: if two vertices have the same objective value, we choose the lexicographically smaller one (equivalent to rotating the objective vector $\vec{c}$ slightly).
+
 
 ---
 
@@ -89,7 +102,21 @@ for a sufficiently large constant $M$. This acts as a bounding box ensuring that
 Let $H_i = \{M_1, M_2, h_1, \dots, h_i\}$ be the set containing the bounding constraints and the first $i$ constraints. Let $C_i$ be the feasible region and $v_i$ be the optimal vertex of $C_i$.
 *   **Lemma (Incremental Update):**
     1.  **Case A (No change):** If $v_{i-1} \in h_i$, then $v_i = v_{i-1}$.
-    2.  **Case B (Reduction to 1D):** If $v_{i-1} \notin h_i$, then either $C_i = \emptyset$ (infeasible), or the new optimal vertex $v_i$ must lie on the bounding line $\ell_i$ of the half-plane $h_i$. (See formal proof in **[Core Lemmas & Theorems Proof Guide Section 28.2](file:///c:/Users/thomy/Obsidian%20notes/021%20University/Algorithms%201/Summaries/English/Core%20Lemmas%20and%20Theorems%20Proof%20Guide.md#L699-L718)**).
+    2.  **Case B (Reduction to 1D):** If $v_{i-1} \notin h_i$, then either $C_i = \emptyset$ (infeasible), or the new optimal vertex $v_i$ must lie on the bounding line $\ell_i$ of the half-plane $h_i$.
+
+##### Geometrical Proof of Case B by Contradiction:
+1.  Assume for sake of contradiction that the new optimal point $v_i$ does not lie on the boundary line $\ell_i$. This means $v_i$ lies strictly in the interior of the half-plane $h_i$ (so $v_i \notin \ell_i$).
+2.  Consider the line segment connecting the old optimal point $v_{i-1}$ and the new optimal point $v_i$:
+    $$S = \{ \lambda v_{i-1} + (1-\lambda) v_i \mid \lambda \in [0, 1] \}$$
+3.  Since both $v_{i-1}$ and $v_i$ are in the feasible region $C_{i-1}$, and $C_{i-1}$ is convex, the entire segment $S$ lies completely inside $C_{i-1}$.
+4.  Because the objective function $f_{\vec{c}}(p) = \vec{c} \cdot p$ is linear, its value changes at a constant rate along the straight line segment $S$. Since $v_{i-1}$ is the unique maximum point in $C_{i-1}$, the value of the objective function must strictly decrease as we walk along the segment from $v_{i-1}$ towards $v_i$.
+5.  Since the old point $v_{i-1}$ violates the new constraint ($v_{i-1} \notin h_i$) and the new point $v_i$ satisfies it ($v_i \in h_i$), the segment connecting them must cross the boundary line $\ell_i$ of $h_i$ at some point $q \in S \cap \ell_i$.
+6.  Because $q$ lies on the segment $S$ strictly between $v_{i-1}$ and $v_i$, it is closer to the maximum point $v_{i-1}$ than $v_i$ is. Since the objective value decreases monotonically along the path $v_{i-1} \to q \to v_i$, we have:
+    $$f_{\vec{c}}(q) > f_{\vec{c}}(v_i)$$
+7.  Since $q \in C_{i-1}$ and $q \in \ell_i \subset h_i$, it satisfies all constraints of $C_i$, meaning $q \in C_i$ is a feasible point.
+8.  Thus, we have found a feasible point $q \in C_i$ that has a strictly higher objective value than our supposed optimal point $v_i$. This is a logical contradiction.
+9.  Therefore, the assumption was false, and the new optimal point $v_i$ must lie on the bounding line $\ell_i$. $\blacksquare$
+
 *   **1D Solver Reduction:** To find the optimal point $v_i$ on $\ell_i$, we intersect all previous $i-1$ half-plane constraints $h_j$ with the line $\ell_i$. Since each $h_j$ is a 2D half-space, its intersection with the 1D line $\ell_i$ is a 1D ray (a bounded half-line). Assuming $\ell_i$ is not vertical (parameterized by $x$), we compute:
     $$x_{\text{left}} = \max \{ x(\ell_i \cap h_j) \mid 1 \le j < i, \text{where } \ell_i \cap h_j \text{ is left-bounded} \}$$
     $$x_{\text{right}} = \min \{ x(\ell_i \cap h_j) \mid 1 \le j < i, \text{where } \ell_i \cap h_j \text{ is right-bounded} \}$$
@@ -179,11 +206,25 @@ For a $d$-dimensional space, Seidel's algorithm generalizes recursively:
     *   Else ($v_{i-1} \notin h_i$): the new optimum must lie on the $(d-1)$-dimensional hyperplane $g_i$ bounding $h_i$.
     *   To find $v_i$, project the objective vector onto $g_i$, intersect all previous $i-1$ constraints with $g_i$ (producing a $(d-1)$-dimensional program), and call the solver recursively.
 
-#### 6.1 Complexity Analysis
-Using backwards analysis, the probability that the optimal vertex changes at step $i$ is at most $d / (i - d)$. This yields the recurrence:
-$$T_d(n) = T_d(n-1) + O(d) + \frac{d}{i-d} \cdot T_{d-1}(i-1)$$
-Solving this recurrence gives a running time of:
-$$T(n, d) = \mathbf{O(d! \cdot n)} \quad \text{expected time.}$$
+#### 6.1 Complexity Analysis & Recurrence Proof
+Using backwards analysis, the probability that a randomly chosen constraint $h_i$ is one of the $d$ hyperplanes defining the optimal vertex is at most $\frac{d}{i}$. This yields the recurrence relation for the expected runtime of Seidel's algorithm in $d$ dimensions:
+$$T(d,n) \le O(d \cdot n) + \sum_{i=1}^n \frac{d}{i} \cdot T(d-1, i-1)$$
+
+##### Inductive Proof that $T(d,n) = O(d! \cdot n)$:
+1.  **Inductive Hypothesis:** Assume that for dimension $d-1$ and any number of constraints, the recurrence holds:
+    $$T(d-1, i-1) \le c' \cdot (d-1)! \cdot (i-1)$$
+    for some constant $c'$.
+2.  Substitute the hypothesis into the recurrence relation for $T(d,n)$:
+    $$T(d,n) \le c_1 \cdot d \cdot n + \sum_{i=1}^n \frac{d}{i} \cdot c_2 \cdot (d-1)! \cdot (i-1)$$
+3.  Group the constants and factorial terms:
+    $$T(d,n) \le c_1 \cdot d \cdot n + c_2 \cdot d! \sum_{i=1}^n \frac{i-1}{i}$$
+4.  Since $\frac{i-1}{i} < 1$ for all $i \ge 1$, we bound the summation:
+    $$\sum_{i=1}^n \frac{i-1}{i} < \sum_{i=1}^n 1 = n$$
+5.  This yields:
+    $$T(d,n) \le c_1 \cdot d \cdot n + c_2 \cdot d! \cdot n$$
+6.  Since $d! \cdot n$ grows much faster than $d \cdot n$, the factorial term dominates:
+    $$T(d,n) = \mathbf{O(d! \cdot n)} \quad \text{expected time.} \quad \blacksquare$$
+
 
 ---
 

@@ -20,7 +20,7 @@ This module compiles the advanced randomized verification, tail bound mechanics,
 
 In past exams, you are frequently required to replace deterministic lower bounds with highly efficient non-deterministic checking routines. Randomized verification reduces structural processing bottlenecks by validating solutions instead of computing them from scratch.
 
-#### 1.1 Freivalds' Algorithm (אלגוריתם פרייבלדס)
+#### 1.1 Freivalds' Algorithm (אלגוריתם פרייבלדס) `[Seen in: Class Lectures]`
 
 - **Objective:** Given three $n \times n$ matrices $A, B,$ and $C$, verify whether $A \cdot B = C$ in $O(n^2)$ time, bypassing the deterministic matrix multiplication lower bound $O(n^\omega)$.
     
@@ -38,13 +38,29 @@ In past exams, you are frequently required to replace deterministic lower bounds
     $$\Pr_{r \in \{0,1\}^n}(A \cdot B \cdot r == C \cdot r \mid A \cdot B \neq C) \le \frac{1}{2}$$
     
 - **Amplification via Repetition:** Running the routine independently $k$ times drops the error probability to at most $\left(\frac{1}{2}\right)^k$. Choosing $k = \Theta(\log n)$ yields an error probability of $O\left(\frac{1}{n}\right)$ within $\mathbf{O(n^2 \log n)}$ total time.
+
+##### Formal Proof of Freivalds' Error Probability:
+1.  Let $D = A \cdot B - C$. Since $A \cdot B \neq C$, the matrix $D \neq 0$, meaning there is at least one non-zero entry in $D$. Let this non-zero entry be $D_{i,j} \neq 0$ at row $i$ and column $j$.
+2.  Consider the $i$-th entry of the vector $D \cdot r$:
+    $$(D \cdot r)_i = \sum_{k=1}^n D_{i,k} r_k = D_{i,j} r_j + \sum_{k \neq j} D_{i,k} r_k$$
+3.  The algorithm returns `True` (incorrectly claiming equality) only if $D \cdot r = \vec{0}$, which requires $(D \cdot r)_i = 0$.
+4.  By the law of total probability, we condition on the choices of all random variables $r_k$ for $k \neq j$. Let $S = \sum_{k \neq j} D_{i,k} r_k$ be the sum of these other terms. For $(D \cdot r)_i$ to be zero, we must have:
+    $$D_{i,j} r_j + S = 0 \implies D_{i,j} r_j = -S$$
+5.  Since $D_{i,j} \neq 0$ and $r_j \in \{0, 1\}$, there is at most *one* value of $r_j$ that satisfies this equation:
+    *   If $S = 0$, then $r_j$ must be 0 (since $D_{i,j} \neq 0$).
+    *   If $S = -D_{i,j}$, then $r_j$ must be 1.
+    *   If $S$ is any other value, no choice of $r_j \in \{0, 1\}$ can satisfy it.
+6.  Since $r_j$ is chosen uniformly at random from $\{0, 1\}$ independently of the other $r_k$, the probability that $r_j$ takes this unique satisfying value is at most $\frac{1}{2}$.
+7.  Thus, the probability that $(D \cdot r)_i = 0$ given any fixed choices for all other $r_k$ is at most $\frac{1}{2}$. Summing over all possible configurations of the other $r_k$:
+    $$\Pr(D \cdot r = \vec{0}) \le \Pr((D \cdot r)_i = 0) \le \frac{1}{2} \quad \blacksquare$$
+
     
 
 #### 1.2 The Light/Heavy Thresholding Technique (טכניקת קל-כבד)
 
 This technique solves algorithms by dividing inputs into **Light** (low frequency/degree) and **Heavy** (high frequency/degree) objects based on a threshold parameter $c$.
 
-##### Application A: Triangle Listing in $O(|E|^{1.5})$ time
+##### Application A: Triangle Listing in $O(|E|^{1.5})$ time `[Seen in: Recitations & Past Exams]`
 *   **Problem:** Report all triangles (triplets $u, v, w$ such that $\{u, v\}, \{v, w\}, \{u, w\} \in E$) in undirected graph $G = (V, E)$.
 *   **The Light/Heavy Split:** Set threshold $c = \sqrt{|E|}$.
     *   A vertex $v$ is **Light** if $\text{deg}(v) \le \sqrt{|E|}$.
@@ -60,7 +76,7 @@ This technique solves algorithms by dividing inputs into **Light** (low frequenc
         *   *Time Complexity:* $|E|$ edges $\times O(\sqrt{|E|})$ intersection $\implies O(|E|^{1.5})$ time.
 *   **Overall Complexity:** $\mathbf{O(|E|^{1.5})}$ time.
 
-##### Application B: Abrahamson-Kosaraju General Alphabet Matching in $O(n\sqrt{m\log m})$ time
+##### Application B: Abrahamson-Kosaraju General Alphabet Matching in $O(n\sqrt{m\log m})$ time `[Seen in: Homeworks]`
 *   **Problem:** Find all occurrences of pattern $P$ of length $m$ in text $T$ of length $n$ under general alphabet $\Sigma$.
 *   **The Light/Heavy Split:** Set threshold $c$ for character frequency in $P$.
     *   A character $\sigma \in \Sigma$ is **Heavy** if it appears $> c$ times in $P$. There are at most $m/c$ heavy characters.
@@ -73,19 +89,39 @@ This technique solves algorithms by dividing inputs into **Light** (low frequenc
 *   **Threshold Minimization:** Choose $c$ such that $\frac{nm}{c} \log m = nc \implies c^2 = m \log m \implies c = \sqrt{m \log m}$.
 *   **Overall Complexity:** $\mathbf{O(n\sqrt{m \log m})}$ time.
 
-##### Application C: Disjoint Set Intersection Queries
-*   **Problem:** Preprocess family of sets $S_1, \dots, S_k$ (total size $\sum |S_i| = n$) to answer disjointness queries: "is $S_i \cap S_j = \emptyset$?"
-*   **The Light/Heavy Split:** Set threshold $c = \sqrt{n}$. A set is heavy if $|S_i| \ge \sqrt{n}$. There are at most $\sqrt{n}$ heavy sets.
+##### Application C: Disjoint Set Intersection Queries `[Seen in: Homeworks & Past Exams]`
+*   **Problem:** Preprocess a family of sets $S_1, \dots, S_k$ (where the total size of all sets is bounded by $\sum_{i=1}^k |S_i| = n$) to answer disjointness queries of the form: "is $S_i \cap S_j = \emptyset$?"
+*   **The Light/Heavy Split:** Classify sets based on a threshold size parameter $c$:
+    *   A set is **Heavy** ($\mathcal{H}$) if $|S_i| \ge c$. Since $\sum |S_i| = n$, there can be at most $H \le \frac{n}{c}$ heavy sets.
+    *   A set is **Light** ($\mathcal{L}$) if $|S_i| < c$.
 *   **The Structure:**
-    1.  Precompute a table $M$ of size $\sqrt{n} \times \sqrt{n}$ for all pairs of heavy sets, storing whether $S_i \cap S_j = \emptyset$. Takes $O(n^{1.5})$ time.
-    2.  For light sets, store their elements in sorted order.
+    1.  Precompute a lookup table $M$ storing the disjointness status for **every pair** of heavy sets.
+    2.  Store all set elements in sorted order.
 *   **Queries:**
-    *   If both $S_i, S_j$ are heavy: lookup in $M$ in $O(1)$ time.
-    *   If at least one is light (say $S_i$): iterate over all elements of $S_i$ and search in $S_j$ (using binary search or two-pointer sweep). Takes $O(|S_i| \log |S_j|) = \tilde{O}(\sqrt{n})$ time.
-*   **Performance:** Preprocessing $\mathbf{\tilde{O}(n^{1.5})}$, Query $\mathbf{\tilde{O}(\sqrt{n})}$.
+    *   If both $S_i$ and $S_j$ are heavy: perform a $O(1)$ table lookup in $M$.
+    *   If at least one set is light (say $S_i$): iterate over each element $x \in S_i$ and perform a binary search in the sorted set $S_j$ in $O(\log |S_j|)$ time. Since $|S_i| < c$, this takes $O(c \log n) = \tilde{O}(c)$ time.
+
+##### Detailed Mathematical Derivation of Preprocessing & Query Bounds:
+1.  **Preprocessing Complexity:**
+    *   Checking if two sorted sets $S_i$ and $S_j$ are disjoint using a two-pointer sweep takes $O(|S_i| + |S_j|)$ time.
+    *   Summing this check over all heavy-heavy pairs yields:
+        $$\text{Preprocessing Time} = \sum_{S_i \in \mathcal{H}} \sum_{S_j \in \mathcal{H}} O(|S_i| + |S_j|) = \sum_{S_i \in \mathcal{H}} \left( H \cdot |S_i| + \sum_{S_j \in \mathcal{H}} |S_j| \right)$$
+    *   Since the sum of sizes of all heavy sets is bounded by the total elements in the family ($\sum_{S \in \mathcal{H}} |S| \le n$), this simplifies to:
+        $$\text{Preprocessing Time} = H \sum_{S_i \in \mathcal{H}} |S_i| + H \sum_{S_j \in \mathcal{H}} |S_j| \le H \cdot n + H \cdot n = O(H \cdot n)$$
+    *   Substituting the count bound $H \le \frac{n}{c}$:
+        $$\text{Preprocessing Time} = O\left( \frac{n^2}{c} \right)$$
+2.  **Query Complexity:**
+    *   If at least one set is light, we search all its elements in the other set:
+        $$\text{Query Time} = O(|S_{\text{light}}| \log |S_{\text{other}}|) \le O(c \log n) = \tilde{O}(c)$$
+3.  **Optimal Threshold Balance:**
+    *   Setting $c = \sqrt{n}$ balances both components:
+        *   **Preprocessing Time:** $O\left( \frac{n^2}{\sqrt{n}} \right) = \mathbf{O(n^{1.5})}$
+        *   **Query Time:** $O(\sqrt{n} \log n) = \mathbf{\tilde{O}(\sqrt{n})}$
+*   **Performance Summary:** Preprocessing: $\mathbf{O(n^{1.5})}$, Query: $\mathbf{\tilde{O}(\sqrt{n})}$.
 
 
-#### 1.3 Hitting Set Construction via Randomized Sampling
+
+#### 1.3 Hitting Set Construction via Randomized Sampling `[Seen in: Class Lectures & Past Exams]`
 *   **Problem:** Given a universal set $U$ of size $n$, and a family of $k$ subsets $\mathcal{S} = \{S_1, \dots, S_k\}$ of $U$ such that each subset satisfies $|S_i| \ge R$ (where $R < n$). A *Hitting Set* is a subset $H \subseteq U$ that has a non-empty intersection with every set in the family, i.e., $H \cap S_i \neq \emptyset$ for all $i \in \{1, \dots, k\}$. Find a relatively small Hitting Set $H$ in $O(m)$ time with high probability.
 *   **The Randomized Algorithm:**
     Choose a sample $H \subseteq U$ by selecting $m$ elements uniformly at random from $U$ (with replacement).
@@ -114,6 +150,25 @@ Let $X_1, X_2, \dots, X_n$ be independent Bernoulli random variables where $\Pr(
     $$\Pr(X \ge (1 + \delta)\mu) \le \left( \frac{e^\delta}{(1+\delta)^{1+\delta}} \right)^\mu$$
     
     - _Simplified Form (for $0 < \delta \le 1$):_ $\Pr(X \ge (1 + \delta)\mu) \le e^{-\mu \delta^2 / 3}$
+
+##### Intuitive Mathematical Proof of the Chernoff Upper Tail:
+1.  **The Exponentiation Step:** Since $f(t) = e^{st}$ is strictly increasing for any positive scaling parameter $s > 0$, we can exponentiate both sides of the inequality without changing the event probability:
+    $$\Pr(X \ge (1+\delta)\mu) = \Pr\big(e^{sX} \ge e^{s(1+\delta)\mu}\big)$$
+2.  **Apply Markov's Inequality:** Because $e^{sX}$ is strictly positive, we can apply Markov's Inequality:
+    $$\Pr\big(e^{sX} \ge e^{s(1+\delta)\mu}\big) \le \frac{E[e^{sX}]}{e^{s(1+\delta)\mu}} = e^{-s(1+\delta)\mu} \cdot E[e^{sX}]$$
+3.  **Exploit Independence:** Since $X = X_1 + \dots + X_n$ is a sum of independent random variables, the functions $e^{sX_i}$ are also mutually independent. The expectation of their product splits into the product of their expectations:
+    $$E[e^{sX}] = E\left[ e^{s\sum X_i} \right] = E\left[ \prod_{i=1}^n e^{sX_i} \right] = \prod_{i=1}^n E[e^{sX_i}]$$
+4.  **Bound a Single Variable:** For each Bernoulli variable $X_i \in \{0, 1\}$ with $\Pr(X_i = 1) = p_i$:
+    $$E[e^{sX_i}] = p_i e^{s(1)} + (1-p_i)e^{s(0)} = 1 + p_i(e^s - 1)$$
+    Applying the classic calculus inequality $1 + x \le e^x$ with $x = p_i(e^s - 1)$ gives:
+    $$E[e^{sX_i}] \le e^{p_i(e^s - 1)}$$
+5.  **Recombine the Variables:** Multiplying these individual bounds together gives:
+    $$E[e^{sX}] \le \prod_{i=1}^n e^{p_i(e^s - 1)} = e^{\sum p_i (e^s - 1)} = e^{\mu(e^s - 1)}$$
+6.  **Optimize the Parameter $s$:** Substituting this back into the Markov bound:
+    $$\Pr(X \ge (1+\delta)\mu) \le e^{-s(1+\delta)\mu} \cdot e^{\mu(e^s - 1)} = \left( \frac{e^{e^s - 1}}{e^{s(1+\delta)}} \right)^\mu$$
+    To make this bound as tight as possible, we minimize the function by taking the derivative of the exponent with respect to $s$ and setting it to 0, which yields $e^s = 1 + \delta \implies s = \ln(1+\delta)$. Substituting this optimal choice of $s$ yields the classic bound:
+    $$\Pr(X \ge (1+\delta)\mu) \le \left( \frac{e^\delta}{(1+\delta)^{1+\delta}} \right)^\mu \quad \blacksquare$$
+
         
 - **Lower Tail Bound Function:** For any deviation parameter $0 < \delta < 1$:
     
@@ -124,7 +179,7 @@ Let $X_1, X_2, \dots, X_n$ be independent Bernoulli random variables where $\Pr(
 
 Karger's algorithm demonstrates how local, random structural operations can solve the global global Minimum Cut problem on unweighted, undirected graphs without building traditional flow networks.
 
-#### 3.1 Edge Contraction Mechanics
+#### 3.1 Edge Contraction Mechanics `[Seen in: Class Lectures]`
 
 The baseline primitive is **Edge Contraction** (כיווץ קשת): selecting an edge $e = (u, v)$ and merging vertices $u$ and $v$ into a single super-vertex. All self-loops created by this merge are removed, but multi-edges connected to other nodes are explicitly preserved.
 
@@ -174,7 +229,7 @@ $$\Pr(\text{Failure Global}) \le \left(1 - \frac{2}{|V|^2}\right)^{c \cdot |V|^2
 - **Overall Time Complexity:** Running $O(|V|^2 \log |V|)$ independent phases, where each contraction phase costs $O(|V|^2)$ time, yields a total runtime of **$O(|V|^4 \log |V|)$**.
     
 
-### 3.5 Randomized Data Structures: Skip Lists (רשימות דילוגים)
+### 3.5 Randomized Data Structures: Skip Lists (רשימות דילוגים) `[Seen in: Class Lectures & Recitations]`
 
 A **Skip List** is a randomized data structure that implements a dynamic dictionary (supporting search, insertion, and deletion) in $O(\log n)$ expected time, matching the performance of balanced search trees (like AVL or Red-Black trees) but with much simpler implementation.
 
@@ -273,6 +328,21 @@ We analyze the search time by tracing the search path **backward** from the dest
     $$E[\text{Search Time}] = O(h) = \mathbf{O(\log n)}$$
 *   **Chernoff Bound Invariant:** The probability that the search time exceeds $c \log n$ steps is exponentially small: $O(1/n^c)$ for a constant $c$, showing that skip lists perform optimally with high probability.
 
+##### Formal Proof of the Recurrence $C(h) = 2h$:
+1.  **Base Case ($h = 0$):** At level 0, we are already at the bottom level, so no upward steps are needed. The expected number of steps is $C(0) = 0$. The formula gives $2(0) = 0$, which holds.
+2.  **Inductive Step:** Assume that for $h-1$, the expected number of steps to climb is $C(h-1) = 2(h-1)$.
+3.  For $h$ levels: from any node, we take exactly 1 step (which always costs 1).
+    *   With probability $1/2$ (coin lands Heads), this step goes up, reducing the remaining levels to climb to $h-1$. The remaining expected steps is $C(h-1)$.
+    *   With probability $1/2$ (coin lands Tails), this step goes left, leaving the remaining levels to climb still at $h$. The remaining expected steps is $C(h)$.
+4.  By the law of total expectation:
+    $$C(h) = 1 + \frac{1}{2} C(h-1) + \frac{1}{2} C(h)$$
+5.  Subtract $\frac{1}{2} C(h)$ from both sides:
+    $$\frac{1}{2} C(h) = 1 + \frac{1}{2} C(h-1) \implies C(h) = C(h-1) + 2$$
+6.  Substituting the inductive hypothesis $C(h-1) = 2(h-1)$:
+    $$C(h) = 2(h-1) + 2 = 2h - 2 + 2 = 2h$$
+    This completes the induction. $\blacksquare$
+
+
 ### 4. Distributed Models & Symmetry Breaking
 
 In distributed computing models, processors sit at the vertices of a graph network and communicate exclusively by passing messages along edge channels. Algorithms must operate without a centralized master scheduler.
@@ -290,7 +360,7 @@ In distributed computing models, processors sit at the vertices of a graph netwo
 > 
 > **The Deterministic Impossibility Principle:** If a distributed network graph is perfectly symmetric (e.g., a completely anonymous ring network where all nodes lack unique IDs and run identical state machines), **no deterministic synchronous algorithm can break symmetry** to choose a single unique leader or generate a valid vertex coloring. Distributed symmetry breaking requires either **Unique Vertex IDs** or **Randomized Primitives**.
 
-##### Randomized Distributed Leader Election
+##### Randomized Distributed Leader Election `[Seen in: Class Lectures & Recitations]`
 
 In an anonymous ring network of size $n$, each node breaks symmetry by independently flipping a fair coin to choose an ID or state:
 
@@ -305,7 +375,22 @@ ANONYMOUS-LEADER-ELECTION-ROUND(i):
 ```
 *   **Termination:** If a node detects that it is the last remaining active node (e.g., via a token round), it declares itself leader. By applying Chernoff or geometric thresholds, the algorithm terminates in **$O(\log n)$ expected rounds**.
 
-##### 4.3 Cole-Vishkin Distributed 3-Coloring Algorithm
+##### Mathematical Proof of Expected Rounds for Leader Election:
+1.  In any round, let $A$ be the set of active nodes, and let $m = |A| \ge 2$ be the number of active nodes.
+2.  Each active node $i$ tosses a coin. A node survives (remains active) if it tosses $b_i = 1$ or if it tosses $b_i = 0$ but its predecessor tosses $b_{pred} = 0$. A node is eliminated (becomes inactive) if and only if it tosses $b_i = 0$ and its predecessor tosses $b_{pred} = 1$.
+3.  For any active node $i$, the probability of elimination is:
+    $$\Pr(i \text{ is eliminated}) = \Pr(b_i == 0 \land b_{pred} == 1) = \Pr(b_i == 0) \cdot \Pr(b_{pred} == 1) = \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{4}$$
+4.  By linearity of expectation, the expected number of eliminated nodes in a round is $\frac{1}{4} m$. Thus, the expected number of remaining active nodes is:
+    $$E[|A'|] = m - \frac{1}{4} m = \frac{3}{4} m$$
+5.  This means the number of active nodes shrinks by a factor of at least $3/4$ in expectation in each round.
+6.  By induction, the expected number of active nodes after $r$ rounds is:
+    $$E[|A_r|] \le n \cdot \left(\frac{3}{4}\right)^r$$
+7.  To find when the number of active nodes drops to 1, we set this expectation to be small (e.g., $1/n$):
+    $$n \cdot \left(\frac{3}{4}\right)^r \le \frac{1}{n} \implies \left(\frac{3}{4}\right)^r \le \frac{1}{n^2} \implies r \ge 2 \log_{4/3} n$$
+8.  Thus, the algorithm reduces the active nodes to 1 in **$O(\log n)$ expected rounds**. $\blacksquare$
+
+
+##### 4.3 Cole-Vishkin Distributed 3-Coloring Algorithm `[Seen in: Class Lectures]`
 
 *   **Objective:** In a synchronous distributed directed ring or path of size $n$, reduce the number of colors from initial unique IDs (range $1 \dots n$, which uses $\log n$ bits) to exactly **3 colors** in **$O(\log^* n)$ rounds**.
 *   **The Cole-Vishkin Bit Invariant:**
@@ -344,7 +429,7 @@ COLE-VISHKIN-STEP(v):
     *   **Round 3:** Repeat for nodes with color 3.
 *   **Total Complexity:** **$O(\log^* n)$ rounds**.
 
-#### 4.4 Distributed $2\Delta$-Coloring Algorithm (צביעה מבוזרת ב-$2\Delta$ צבעים)
+#### 4.4 Distributed $2\Delta$-Coloring Algorithm (צביעה מבוזרת ב-$2\Delta$ צבעים) `[Seen in: Class Lectures & Recitations]`
 
 *   **Objective:** In a distributed LOCAL network graph with maximum degree $\Delta$, color the vertices using at most $2\Delta$ colors in **expected $O(\log n)$ rounds**.
 *   **Operational Strategy:**
@@ -377,7 +462,7 @@ DISTRIBUTED-2DELTA-COLORING(v):
     7.  By linearity of expectation, the expected total rounds is:
         $$E[\text{rounds}] \le 3 \cdot (\log_{4/3} n + 1) = \mathbf{O(\log n)}$$
 
-#### 4.5 Distributed Symmetry Breaking via Polynomial ID Ranges
+#### 4.5 Distributed Symmetry Breaking via Polynomial ID Ranges `[Seen in: Recitations & Homeworks]`
 *   **The Anonymous ID Assignment Problem:** In distributed networks where nodes initially lack unique identifiers (anonymous graphs), nodes must assign themselves unique IDs from a range $\{1, \dots, R\}$ to initialize routing protocols. 
 *   **The Linear Range Hazard ($R = n$):**
     If each of the $n$ nodes chooses a random ID uniformly from $\{1, \dots, n\}$, the probability that *at least one ID collision occurs* is exceptionally high. In fact, as $n \to \infty$, the probability of collision approaches 1:
@@ -392,7 +477,7 @@ DISTRIBUTED-2DELTA-COLORING(v):
 
 ### 5. Exam-Style Applications & Problem Solving Techniques
 
-#### 5.1 Paradigm A: Applying Chernoff Bounds to Load Balancing (2026 Moed A)
+#### 5.1 Paradigm A: Applying Chernoff Bounds to Load Balancing (2026 Moed A) `[Seen in: Past Exams (2026 Moed A)]`
 
 > [!IMPORTANT]
 > 
@@ -447,16 +532,16 @@ Suppose you distribute $n$ independent software tasks uniformly at random across
 
     
 
-#### 5.3 Paradigm B: Advanced Probability & Permutation Shuffling Paradigms (Homework 12)
+#### 5.3 Paradigm B: Advanced Probability & Permutation Shuffling Paradigms (Homework 12) `[Seen in: Homeworks]`
 
-##### 1. Greedy BFS-Based $k$-Connectivity Counterexample
+##### 1. Greedy BFS-Based $k$-Connectivity Counterexample `[Seen in: Homeworks]`
 *   **The Claim:** One can verify if a graph is $k$-edge-connected between $u$ and $v$ by running BFS to find a shortest path, deleting its edges, and repeating this $k-1$ times.
 *   **The Refutation (Counterexample):** This greedy approach is incorrect. Consider the undirected graph $G = (V, E)$ with $V = \{u, v_1, v_2, v\}$ and $E = \{(u, v_1), (u, v_2), (v_1, v_2), (v_1, v), (v_2, v)\}$.
     *   There are 2 edge-disjoint paths from $u$ to $v$: $u \to v_1 \to v$ and $u \to v_2 \to v$.
     *   If the greedy algorithm runs BFS, it may select the shortest path $u \to v_1 \to v_2 \to v$ (length 3). After deleting these three edges, the remaining edges are $\{(u, v_2), (v_1, v)\}$, which do not contain any path from $u$ to $v$. The algorithm will report 1 path, failing to find the 2 disjoint paths.
     *   *Solution:* We must use Ford-Fulkerson to compute max-flow (where paths can backtrack using residual edges) or Dinic's.
 
-##### 2. Implementing `random(i, j)` using Fair Coin `Rand()`
+##### 2. Implementing `random(i, j)` using Fair Coin `Rand()` `[Seen in: Homeworks & Past Exams]`
 *   **Problem:** Implement a uniform random choice in the range $[i, j]$ using a fair coin `Rand()` (which returns 0 or 1 with probability 1/2).
 *   **Algorithm (Rejection Sampling):**
     1. Let $R = j - i + 1$ be the size of the range.
@@ -471,7 +556,7 @@ Suppose you distribute $n$ independent software tasks uniformly at random across
     *   Each iteration takes $O(k) = O(\log(j - i))$ coin flips.
     *   Total expected runtime: $\mathbf{O(\log(j - i))}$ time.
 
-##### 3. The Secretary Problem: Hiring Exactly 2 Candidates
+##### 3. The Secretary Problem: Hiring Exactly 2 Candidates `[Seen in: Homeworks]`
 *   **Problem:** In the classic secretary hiring problem with $n$ candidates (where a candidate is hired if and only if they are better than all previously seen candidates), what is the probability that exactly 2 candidates are hired?
 *   **Analysis:**
     *   Let the candidates be a random permutation of $\{1, \dots, n\}$. The first candidate (index 1) is always hired.
@@ -480,7 +565,7 @@ Suppose you distribute $n$ independent software tasks uniformly at random across
     *   The probability is:
         $$\Pr(\text{Exactly 2 hired}) = \frac{(n-1)! H_{n-1}}{n!} = \mathbf{\frac{H_{n-1}}{n}}$$
 
-##### 4. Simulating a Fair Coin Using a Biased Coin (von Neumann's Trick)
+##### 4. Simulating a Fair Coin Using a Biased Coin (von Neumann's Trick) `[Seen in: Homeworks]`
 *   **Problem:** Given a biased coin with unknown probability of heads $p$ ($0 < p < 1$), simulate a fair coin `Rand()`.
 *   **Algorithm:**
     1. Toss the biased coin twice.
@@ -492,7 +577,7 @@ Suppose you distribute $n$ independent software tasks uniformly at random across
     *   The probability of success in any pair of tosses is $q = 2p(1-p)$.
     *   The expected number of tosses required is $\frac{2}{q} = \mathbf{\frac{1}{p(1-p)}}$ expected tosses.
 
-##### 5. Random Permutation Shuffling Bugs
+##### 5. Random Permutation Shuffling Bugs `[Seen in: Class Lectures & Homeworks]`
 *   **Bad Shuffling Algorithm:** Swap $A[i]$ with $A[\text{Random}(i+1, n)]$ for $i = 1 \dots n-1$.
     *   *Why it is biased:* The total number of possible decision branches is $(n-1) \cdot (n-2) \cdots 1 = (n-1)!$. Since there are $n!$ possible permutations, it is mathematically impossible to assign equal probability to all permutations (as $(n-1)!$ cannot be divided evenly by $n!$). In fact, the element at $A[1]$ is always swapped with some element in $A[2 \dots n]$, so $A[1]$ can never remain at index 1.
 *   **Paranoia / Insufficiency Proof:** A student claims that showing $\Pr(\pi(i) = j) = \frac{1}{n}$ for all $i, j$ is sufficient to prove a shuffling algorithm is uniform.
