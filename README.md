@@ -39,3 +39,20 @@ BIU_Algo1_study_skills/
 ### Step 2: Trigger the Exam Practice
 Open the workspace in your Antigravity IDE. Once loaded, open a chat session with your AI Coding Assistant and say:
 > *"Let's start the exam simulation"* or *"Test me using the biu-algo1-exam-practice skill."*
+
+---
+
+## 📂 How to Open and Preview Files
+
+### 💜 Option 1: Open as an Obsidian Vault (Recommended)
+This repository is pre-configured with Obsidian settings (including a `.obsidian/` directory) to render math formulas, tables, and links perfectly.
+1. Open **Obsidian**.
+2. Click **Open folder as vault**.
+3. Select the root folder of this repository (`BIU_Algo1_study_skills`).
+4. You can write your answers directly in Obsidian, and LaTeX math formulas (e.g. $O(|V|^\omega)$) will render instantly.
+
+### 🌐 Option 2: Preview in Antigravity IDE
+1. Open the repository root folder in the **Antigravity IDE**.
+2. Use the **Markdown Preview** feature built into the IDE to read the question sheets and solutions.
+3. Click the absolute `file:///` links output by the agent in the chat to open files directly in your editor workspace.
+
