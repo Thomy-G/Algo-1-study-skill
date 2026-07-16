@@ -15,9 +15,9 @@ This document contains the official, rigorous solutions for the 2025 Winter Moed
 
 ### Part b) [7 Points]
 **Algorithm Description:**
-The constraint is that the flow uses at most 3 edges incident to $u$. Let $E(u)$ be the edges incident to $u$. Since $	ext{deg}(u) = 11$, there are 11 such edges.
+The constraint is that the flow uses at most 3 edges incident to $u$. Let $E(u)$ be the edges incident to $u$. Since $\text{deg}(u) = 11$, there are 11 such edges.
 1. Let $\mathcal{S}$ be the set of all subsets of $E(u)$ of size at most 3. The number of such subsets is:
-   $$\sum_{i=0}^3 inom{11}{i} = 1 + 11 + 55 + 165 = 232$$
+   $$\sum_{i=0}^3 \binom{11}{i} = 1 + 11 + 55 + 165 = 232$$
 2. For each subset $E_u \in \mathcal{S}$:
    - Construct a modified flow network $G' = (V, E')$:
      - Remove $u$ and all its incident edges.
@@ -33,7 +33,7 @@ The optimal constrained flow must use some subset of edges incident to $u$ of si
 **Complexity:**
 - There are exactly 232 configurations.
 - For each, we run Dinic's algorithm which takes $O(|V|^2 |E|)$ time.
-- **Total Time Complexity:** $232 	imes O(|V|^2 |E|) = O(|V|^2 |E|)$ time.
+- **Total Time Complexity:** $232 \times O(|V|^2 |E|) = O(|V|^2 |E|)$ time.
 - **Total Space Complexity:** $O(|V| + |E|)$.
 
 ---
@@ -51,18 +51,18 @@ If the augmenting path is allowed to contain cycles, we can route flow along a c
 ### Part a) [10 Points]
 **Expected Runtime:**
 - When placing the $x$-th element, there are $x-1$ occupied slots in the array, and $n - x + 1$ empty slots.
-- The probability of choosing an empty slot in each try is $p_x = rac{n - x + 1}{n}$.
-- The number of tries $T_x$ to find an empty slot is a geometric random variable with parameter $p_x$, so $E[T_x] = rac{n}{n - x + 1}$.
+- The probability of choosing an empty slot in each try is $p_x = \frac{n - x + 1}{n}$.
+- The number of tries $T_x$ to find an empty slot is a geometric random variable with parameter $p_x$, so $E[T_x] = \frac{n}{n - x + 1}$.
 - The total expected number of tries is:
-  $$E[T] = \sum_{x=1}^n E[T_x] = \sum_{x=1}^n rac{n}{n - x + 1} = n \sum_{j=1}^n rac{1}{j} = n H_n \in \Theta(n \log n)$$
+  $$E[T] = \sum_{x=1}^n E[T_x] = \sum_{x=1}^n \frac{n}{n - x + 1} = n \sum_{j=1}^n \frac{1}{j} = n H_n \in \Theta(n \log n)$$
   Each try takes $O(1)$ time. Thus, the expected runtime is $\Theta(n \log n)$.
 
 **High Probability Bound (w.h.p.):**
 - This problem is equivalent to the Coupon Collector's problem.
 - Let $T$ be the total number of tries. It is a standard result that for any constant $c > 0$:
   $$P(T > n \ln n + c n) \le e^{-c}$$
-  Choosing $c = lpha \ln n$, we get:
-  $$P(T > (lpha + 1) n \ln n) \le n^{-lpha}$$
+  Choosing $c = \alpha \ln n$, we get:
+  $$P(T > (\alpha + 1) n \ln n) \le n^{-\alpha}$$
   Thus, with high probability, the number of tries is $O(n \log n)$.
 
 ---
@@ -72,10 +72,10 @@ If the augmenting path is allowed to contain cycles, we can route flow along a c
 Let $P = [p_1, \dots, p_n]$ be any specific permutation of $\{1, \dots, n\}$.
 - The algorithm assigns the numbers $1, 2, \dots, n$ to slots sequentially.
 - When placing $x$, we choose one of the remaining $n - x + 1$ empty slots uniformly at random.
-- The probability that $x$ is placed in the exact slot specified by the permutation is exactly $rac{1}{n - x + 1}$.
+- The probability that $x$ is placed in the exact slot specified by the permutation is exactly $\frac{1}{n - x + 1}$.
 - Since the choices at each step are independent, the probability of generating the exact permutation $P$ is:
-  $$\prod_{x=1}^n rac{1}{n - x + 1} = rac{1}{n} \cdot rac{1}{n-1} \dots rac{1}{1} = rac{1}{n!}$$
-- Since this probability is identical for all $n!$ permutations, the output is uniformly distributed. $lacksquare$
+  $$\prod_{x=1}^n \frac{1}{n - x + 1} = \frac{1}{n} \cdot \frac{1}{n-1} \dots \frac{1}{1} = \frac{1}{n!}$$
+- Since this probability is identical for all $n!$ permutations, the output is uniformly distributed. $\blacksquare$
 
 ---
 
@@ -117,7 +117,7 @@ We find a minimal feedback arc set by starting with all edges and greedily tryin
 6. This means the average degree is $2 - 2/|V_T| < 2$. Since the degrees are integers, there must be at least one leaf vertex $v$ in $T$ with degree exactly 1.
 7. In the oriented graph, this leaf $v$ must have either $in\_deg(v) = 1, out\_deg(v) = 0$ or $in\_deg(v) = 0, out\_deg(v) = 1$.
 8. In either case, $|in\_deg(v) - out\_deg(v)| = 1 \ge 1$.
-Thus, there always exists at least one vertex with a difference of at least 1. $lacksquare$
+Thus, there always exists at least one vertex with a difference of at least 1. $\blacksquare$
 
 ---
 
@@ -128,9 +128,9 @@ We orient the tree bottom-up from the leaves.
 2. Specifically, run a post-order traversal (DFS) starting at $r$.
 3. For each vertex $u$ processed:
    - For each child $v$ of $u$:
-     - If the difference $in\_deg(v) - out\_deg(v)$ is $+1$, we must orient the edge between $u$ and $v$ as $v ightarrow u$ to keep $v$'s difference at 0.
-     - If the difference is $-1$, we orient it as $u ightarrow v$.
-     - If the difference is $0$, we can choose either direction arbitrarily (e.g. $u ightarrow v$).
+     - If the difference $in\_deg(v) - out\_deg(v)$ is $+1$, we must orient the edge between $u$ and $v$ as $v \rightarrow u$ to keep $v$'s difference at 0.
+     - If the difference is $-1$, we orient it as $u \rightarrow v$.
+     - If the difference is $0$, we can choose either direction arbitrarily (e.g. $u \rightarrow v$).
 4. Return the oriented tree.
 
 **Correctness:**

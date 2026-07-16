@@ -20,8 +20,7 @@ Consider the following randomized algorithm to generate a permutation of $\{1, 2
 1. Initialize all elements in $P$ to 0.
 2. For each $x = 1$ to $n$:
    a. Generate a random index $i$ uniformly at random from $\{1, 2, \dots, n\}$.
-   b. While $P[i] 
-eq 0$:
+   b. While $P[i] \ne 0$:
       - Generate a new random index $i$ uniformly at random from $\{1, 2, \dots, n\}$.
    c. Set $P[i] = x$.
 3. Return $P$.
@@ -55,11 +54,11 @@ $$\max_{u \in V} |in\_deg(u) - out\_deg(u)| \le 1$$
 
 Let $\Sigma = \{A, T, C, G\}$ be the alphabet of DNA nucleotides, where $A$ complements $T$ (and vice versa) and $C$ complements $G$ (and vice versa).
 The complementary-reverse of a string $S$, denoted by $RC(S)$, is obtained by reversing $S$ and replacing each character with its complement.
-For example, if $S = 	ext{"GTAGTC"}$, then $RC(S) = 	ext{"GACTAC"}$.
+For example, if $S = \text{"GTAGTC"}$, then $RC(S) = \text{"GACTAC"}$.
 
 We define a string $W$ to be *complementary-reverse symmetric* if $W = S' \cdot RC(S')$ for some string $S'$.
 Given a string $S$ of length $n$, we want to find the length of the longest complementary-reverse symmetric subsequence of $S$.
-For example, for $S = 	ext{"GTAGTC"}$, the longest such subsequence is $	ext{"GATC"}$ (since $S'=	ext{"GA"}$ and $RC(S')=	ext{"TC"}$, and $	ext{"GATC"}$ is a subsequence of $S$). The output should be 4.
+For example, for $S = \text{"GTAGTC"}$, the longest such subsequence is $\text{"GATC"}$ (since $S'=\text{"GA"}$ and $RC(S')=\text{"TC"}$, and $\text{"GATC"}$ is a subsequence of $S$). The output should be 4.
 
 *   **a) [10 Points]** Describe a recursive formula to solve the problem. Explain the correctness of your formula.
 *   **b) [10 Points]** Describe a dynamic programming algorithm based on your recursive formula. Analyze its time and space complexities.
