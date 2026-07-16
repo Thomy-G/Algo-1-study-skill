@@ -186,11 +186,15 @@ Thus, the sum of probabilities is always 1, and the distribution is valid. $\bla
    $$p_i > 2^{k-1} \cdot \frac{1}{2^{k+1}} = \frac{1}{4}$$
    Thus, $p_i \ge 1/4$ for all $1 \le i < n$.
 
-**Upper Bound on Expected Number of Draws:**
+**Tight Asymptotic Bound on Expected Number of Draws:**
 Let $X_i$ be the number of draws needed to collect the $i$-th coupon after $i-1$ coupons have been collected.
-- $X_i$ is a geometric random variable with parameter $p_i$.
-- The expected number of draws for this step is $E[X_i] = \frac{1}{p_i}$.
-- Since $p_i \ge 1/4$, we have $E[X_i] \le 4$.
-The total expected number of draws to collect all $n$ coupons is:
-$$E[X] = \sum_{i=1}^n E[X_i] \le \sum_{i=1}^n 4 = 4n$$
-Thus, the expected number of draws is bounded by $4n \in O(n)$ (linear time). $\blacksquare$
+- $X_i$ is a geometric random variable with parameter $p_i$, so the expected number of draws for this step is $E[X_i] = \frac{1}{p_i}$.
+- **Upper Bound:** Since $p_i \ge 1/4$ for all $1 \le i \le n$, we have $E[X_i] = \frac{1}{p_i} \le 4$.
+  By Linearity of Expectation, the total expected draws is:
+  $$E[X] = \sum_{i=1}^n E[X_i] \le \sum_{i=1}^n 4 = 4n \in O(n)$$
+- **Lower Bound:** Since $p_i \le 1$ (as it is a probability), we must have $E[X_i] = \frac{1}{p_i} \ge 1$ (we need at least 1 draw on average to collect a new coupon).
+  Thus:
+  $$E[X] = \sum_{i=1}^n E[X_i] \ge \sum_{i=1}^n 1 = n \in \Omega(n)$$
+- **Conclusion:** Since $E[X] \in O(n)$ and $E[X] \in \Omega(n)$, the expected number of draws is tightly bounded by:
+  $$E[X] \in \Theta(n)$$
+  This confirms that the expected number of draws is linear in $n$ (unlike the standard coupon collector which is $\Theta(n \log n)$). $\blacksquare$
