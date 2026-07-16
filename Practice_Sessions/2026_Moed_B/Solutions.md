@@ -124,18 +124,34 @@ This is exactly the definition of $Score(A,k)$. Thus, the FFT multiplication com
 4. Concatenate the sorted buckets to obtain the final sorted array.
 
 ### Expected Runtime Analysis
-Let $n_i$ be the random variable denoting the number of elements that fall into bucket $B_i$.
-Since the input elements are drawn independently and uniformly from $[0, 1)$, each element has probability $p = 1/m$ of falling into bucket $B_i$. Thus, $n_i \sim \text{Binomial}(n, 1/m)$.
-- Distributing elements takes $O(n)$ time.
-- Insertion sort on bucket $i$ takes $O(n_i^2)$ time.
-- Concatenating buckets takes $O(m)$ time.
-The expected total runtime is:
-$$E[T(n)] = O(n + m) + \sum_{i=0}^{m-1} E[O(n_i^2)]$$
-Using the properties of the Binomial distribution:
-$$E[n_i^2] = \text{Var}(n_i) + (E[n_i])^2 = n \cdot \frac{1}{m} \left(1 - \frac{1}{m}\right) + \left(\frac{n}{m}\right)^2 = \frac{n}{m} - \frac{n}{m^2} + \frac{n^2}{m^2}$$
-Summing this expected cost over all $m$ buckets:
-$$\sum_{i=0}^{m-1} E[O(n_i^2)] = m \cdot O\left(\frac{n}{m} + \frac{n^2}{m^2}\right) = O\left(n + \frac{n^2}{m}\right)$$
-Since $m \in o(n)$, the term $\frac{n^2}{m}$ dominates $n$. Therefore, the expected runtime is:
+Let $n_i$ be the random variable representing the number of elements that fall into bucket $B_i$.
+Since the input elements are drawn independently and uniformly from $[0, 1)$, each element has a probability $p = 1/m$ of falling into bucket $B_i$. Thus, $n_i$ follows a Binomial distribution: $n_i \sim \text{Binomial}(n, 1/m)$.
+
+The total runtime $T(n)$ of the algorithm is composed of three parts:
+1. **Distribution Phase:** Placing each of the $n$ elements into its corresponding bucket takes $O(1)$ time per element, yielding $O(n)$ time in total.
+2. **Bucket Overhead (Initialization & Concatenation):** Initializing the $m$ empty buckets and performing the final concatenation of the $m$ sorted buckets takes $O(m)$ time.
+3. **Sorting Phase:** Sorting each bucket $i$ containing $n_i$ elements using Insertion Sort takes $O(n_i^2)$ time.
+
+Thus, the total runtime is:
+$$T(n) = O(n + m) + \sum_{i=0}^{m-1} O(n_i^2)$$
+
+By applying **Linearity of Expectation**, the expected total runtime is:
+$$E[T(n)] = E\left[ O(n + m) + \sum_{i=0}^{m-1} O(n_i^2) \right] = O(n + m) + \sum_{i=0}^{m-1} E[O(n_i^2)]$$
+
+To calculate the expected value of $n_i^2$, we use the variance and expectation formulas for a Binomial random variable $n_i$:
+*   $E[n_i] = n \cdot p = \frac{n}{m}$
+*   $\text{Var}(n_i) = n \cdot p \cdot (1 - p) = \frac{n}{m} \left(1 - \frac{1}{m}\right)$
+
+Since $\text{Var}(n_i) = E[n_i^2] - (E[n_i])^2$, we can solve for $E[n_i^2]$:
+$$E[n_i^2] = \text{Var}(n_i) + (E[n_i])^2 = \frac{n}{m} \left(1 - \frac{1}{m}\right) + \left(\frac{n}{m}\right)^2 = \frac{n}{m} - \frac{n}{m^2} + \frac{n^2}{m^2}$$
+
+Now, we sum this expected cost over all $m$ buckets:
+$$\sum_{i=0}^{m-1} E[O(n_i^2)] = m \cdot O\left(\frac{n}{m} - \frac{n}{m^2} + \frac{n^2}{m^2}\right) = O\left(n - \frac{n}{m} + \frac{n^2}{m}\right) = O\left(n + \frac{n^2}{m}\right)$$
+
+Combining this back into our total expectation:
+$$E[T(n)] = O(n + m) + O\left(n + \frac{n^2}{m}\right) = O\left(n + m + \frac{n^2}{m}\right)$$
+
+Since $m \in o(n)$, it holds that $m < n$ and the term $\frac{n^2}{m}$ strictly dominates $n$ (because $\frac{n}{m} \to \infty$). Therefore, the asymptotic expected runtime simplifies to:
 $$E[T(n)] \in \Theta\left(\frac{n^2}{m}\right)$$
 
 ### Comparison with Standard Bucket Sort
