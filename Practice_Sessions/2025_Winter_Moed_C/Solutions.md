@@ -40,17 +40,33 @@ We can decide this using a single run of the max-flow algorithm by analyzing rea
 
 ### Part c) [8 Points]
 **Algorithm Description:**
-An edge $e = (u,v)$ belongs to no minimum cut if and only if there is a path from $u$ to $v$ in the residual graph $G_{f^*}$:
+An edge $e = (u,v)$ belongs to no minimum $s-t$ cut if and only if it cannot cross any minimum cut from the $S$-side to the $T$-side. This holds if and only if at least one of the following conditions is satisfied:
+1. $e$ is not saturated in the max flow $f^*$ (i.e., $f^*(e) < c(e)$).
+2. $v$ is reachable from $s$ in the residual graph $G_{f^*}$.
+3. $t$ is reachable from $u$ in the residual graph $G_{f^*}$.
+4. $u$ is reachable from $v$ in the residual graph $G_{f^*}$.
+
+**Algorithm Steps:**
 1. Compute the maximum flow $f^*$ on $G$ using Dinic's algorithm.
 2. Build the residual graph $G_{f^*}$.
-3. Run a BFS/DFS starting from $u$ in $G_{f^*}$ to determine if $v$ is reachable from $u$.
-4. If $v$ is reachable from $u$ in $G_{f^*}$, return `True`; otherwise, return `False`.
+3. If $f^*(e) < c(e)$, return `True`.
+4. Run a BFS/DFS starting from $s$ in $G_{f^*}$ to find $S^*$ (the set of reachable vertices from $s$). If $v \in S^*$, return `True`.
+5. Run a BFS/DFS starting from $u$ in $G_{f^*}$. If $t$ is reachable from $u$, return `True`.
+6. Run a BFS/DFS starting from $v$ in $G_{f^*}$. If $u$ is reachable from $v$, return `True`.
+7. Otherwise, return `False`.
 
 **Proof of Correctness:**
-- **Direction 1 (If):** Suppose there is a directed path $P$ from $u$ to $v$ in the residual graph $G_{f^*}$. Every edge in $G_{f^*}$ has strictly positive residual capacity. If a cut $(S, T)$ has $u \in S$ and $v \in T$, the path $P$ must cross the cut from $S$ to $T$ along some edge with positive residual capacity. But for $(S, T)$ to be a minimum cut, all edges crossing from $S$ to $T$ must have residual capacity 0 in $G_{f^*}$. Thus, no minimum cut can have $u \in S$ and $v \in T$, meaning $e = (u,v)$ belongs to no minimum cut. (Note: This includes the case where $e$ is not saturated in $f^*$, since if $e$ is not saturated, the residual edge $u \rightarrow v$ exists, so $v$ is directly reachable from $u$).
-- **Direction 2 (Only if):** Suppose $v$ is not reachable from $u$ in $G_{f^*}$. We can define a set $S'$ of all vertices reachable from $u$ in $G_{f^*}$. Since $v$ is not reachable, $v \notin S'$. We can then extend this to define a minimum cut $(S, T)$ where $u \in S$ and $v \in T$. Thus, $e = (u,v)$ crosses this minimum cut, meaning it belongs to at least one minimum cut.
+By Picard's characterization of minimum cuts, an edge $e = (u,v)$ belongs to **at least one** minimum cut $(S, T)$ (with $u \in S$ and $v \in T$) if and only if:
+- $e$ is saturated (if $e$ is not saturated, $u \rightarrow v$ exists in $G_{f^*}$, so it cannot cross any minimum cut since a min cut cannot contain edges with positive residual capacity).
+- $v \notin S^*$ (if $v \in S^*$, then since $S^* \subseteq S$ for all min cuts, we must have $v \in S$, preventing $v$ from being on the $T$-side).
+- $u \notin T^*$ (if $u \in T^*$, then since $T^* \subseteq T$ for all min cuts, we must have $u \in T$, preventing $u$ from being on the $S$-side).
+- $u$ is not reachable from $v$ in $G_{f^*}$ (if there is a path $v \rightarrow u$ in $G_{f^*}$, then we cannot have $u \in S$ and $v \in T$ because a path in $G_{f^*}$ cannot cross from $T$ to $S$ since all backward edges of the min cut are saturated, i.e., have capacity 0 in the opposite direction).
+
+Since $e$ is in no minimum cut if and only if the negation of the above four conditions holds, $e$ is in no min cut if and only if $e$ is not saturated, or $v \in S^*$, or $u \in T^*$, or $u$ is reachable from $v$ in $G_{f^*}$.
 
 **Complexity:**
+- Dinic's algorithm takes $O(|V|^2 |E|)$ time.
+- The three BFS/DFS searches take $O(|V| + |E|)$ time.
 - **Total Time Complexity:** $O(|V|^2 |E|)$ time (requires only a single max-flow execution).
 - **Total Space Complexity:** $O(|V| + |E|)$.
 
