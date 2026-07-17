@@ -89,7 +89,7 @@ We solve this by constructing a bipartite representation of the graph (a layer g
 Any path in $G'$ starting at $u_{even}$ alternates between even and odd layers. Thus, a path reaching $v_{even}$ must contain an even number of edges. Since the edge weights are preserved, the shortest path from $u_{even}$ to $v_{even}$ in $G'$ corresponds exactly to the shortest path from $u$ to $v$ in $G$ with an even number of edges.
 
 **Complexity Analysis:**
-- Running SSSP from all vertices using Bellman-Ford takes $|V| 	imes O(|V'||E'|) = O(|V|^2 |E|)$ time.
+- Running SSSP from all vertices using Bellman-Ford takes $|V| \times O(|V'||E'|) = O(|V|^2 |E|)$ time.
 - If edge weights are non-negative, we can use Dijkstra's algorithm from each node which takes $O(|V||E| + |V|^2 \log |V|)$ time.
 
 ---
@@ -109,8 +109,8 @@ We solve this problem greedily by working backwards from $n$ to 1:
 Working backwards, the operations are:
 1. Divide by 2 (if even).
 2. Subtract 1.
-- Suppose we are at an odd number $n$. The only way to reach $n$ in the forward direction is by adding 1 to $n-1$, because we cannot reach an odd number by multiplying by 2. Thus, the step $n ightarrow n-1$ is forced.
-- Suppose we are at an even number $n$. We can either divide by 2 ($n ightarrow n/2$) or subtract 1 ($n ightarrow n-1$).
+- Suppose we are at an odd number $n$. The only way to reach $n$ in the forward direction is by adding 1 to $n-1$, because we cannot reach an odd number by multiplying by 2. Thus, the step $n \rightarrow n-1$ is forced.
+- Suppose we are at an even number $n$. We can either divide by 2 ($n \rightarrow n/2$) or subtract 1 ($n \rightarrow n-1$).
   - If we subtract 1, we get an odd number $n-1$, which forces us to subtract 1 again to get $n-2$. This takes 2 steps to reach $n-2$.
   - If we divide by 2, we reach $n/2$ in 1 step. From $n/2$, we can reach $n-2$ in at most 1 step if we add 1 and then multiply by 2 (which is equivalent). In all cases, dividing by 2 is always optimal or better because it reduces the number much faster.
 
@@ -131,7 +131,7 @@ Working backwards, the operations are:
 2. Choose 8 vertices $v_1, \dots, v_8$ independently and uniformly at random from $V$.
 3. For each $v_i$:
    - Query $f(u, v_i)$.
-   - If $f(u, v_i) == 	ext{False}$, return `False` (disconnected).
+   - If $f(u, v_i) == \text{False}$, return `False` (disconnected).
 4. If all 8 queries return `True`, return `True` (connected).
 
 **Proof of Correctness:**
@@ -139,7 +139,7 @@ Working backwards, the operations are:
 - If $G$ is disconnected, by the problem statement, the largest connected component has size at most $|V|/4$.
   - The probability that a randomly chosen vertex $v_i$ belongs to the same component as $u$ is at most $1/4$.
   - The probability that all 8 vertices $v_1, \dots, v_8$ belong to the same component as $u$ is:
-    $$P(	ext{False Positive}) \le \left(rac{1}{4}ight)^8 = rac{1}{65536} < rac{1}{4}$$
+    $$P(\text{False Positive}) \le \left(\frac{1}{4}\right)^8 = \frac{1}{65536} < \frac{1}{4}$$
   - Thus, the success probability of detecting that the graph is disconnected is at least $1 - 1/65536 > 3/4$.
 
 **Complexity:**
@@ -160,7 +160,7 @@ To succeed with high probability, we increase the number of random samples:
 **Proof of Correctness:**
 - If $G$ is connected, it always returns `True`.
 - If $G$ is disconnected, the probability of failing to find a disconnected vertex is:
-  $$P(	ext{Failure}) \le \left(rac{1}{4}ight)^{C \log |V|} = |V|^{-2C} \le |V|^{-c}$$
+  $$P(\text{Failure}) \le \left(\frac{1}{4}\right)^{C \log |V|} = |V|^{-2C} \le |V|^{-c}$$
   This is less than $1/|V|^c$ for any desired constant $c$. Thus, the algorithm succeeds with high probability.
 
 **Complexity:**
@@ -175,16 +175,15 @@ To succeed with high probability, we increase the number of random samples:
 Let $DP[i, j]$ be the maximum global alignment score between prefixes $S[1 \dots i]$ and $T[1 \dots j]$.
 - **Base Cases:**
   - $DP[0, 0] = 0$.
-  - $DP[i, 0] = -0.5 	imes i$ (aligning $S[1 \dots i]$ with $i$ gaps).
-  - $DP[0, j] = -0.5 	imes j$ (aligning $T[1 \dots j]$ with $j$ gaps).
+  - $DP[i, 0] = -0.5 \times i$ (aligning $S[1 \dots i]$ with $i$ gaps).
+  - $DP[0, j] = -0.5 \times j$ (aligning $T[1 \dots j]$ with $j$ gaps).
 - **Recursive Step:**
   For $i > 0$ and $j > 0$:
-  $$DP[i, j] = \max egin{cases} 
-    DP[i-1, j-1] + 1 & 	ext{if } s_i == t_j 	ext{ (Match)} \
-    DP[i-1, j-1] - 1 & 	ext{if } s_i 
-e t_j 	ext{ (Mismatch)} \
-    DP[i-1, j] - 0.5 & 	ext{Gap in } T \
-    DP[i, j-1] - 0.5 & 	ext{Gap in } S 
+  $$DP[i, j] = \max \begin{cases} 
+    DP[i-1, j-1] + 1 & \text{if } s_i == t_j \text{ (Match)} \\
+    DP[i-1, j-1] - 1 & \text{if } s_i \ne t_j \text{ (Mismatch)} \\
+    DP[i-1, j] - 0.5 & \text{Gap in } T \\
+    DP[i, j-1] - 0.5 & \text{Gap in } S 
   \end{cases}$$
 
 ### DP Complexity
