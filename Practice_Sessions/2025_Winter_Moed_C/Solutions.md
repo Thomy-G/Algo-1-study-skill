@@ -16,38 +16,42 @@ A **minimum $s-t$ cut** is a cut whose capacity is minimized over all valid cuts
 
 ### Part b) [7 Points]
 **Algorithm Description:**
-An edge $e = (u,v)$ is in every min cut if and only if increasing its capacity by any $\epsilon > 0$ increases the maximum flow value.
-1. Run a max-flow algorithm (e.g. Dinic's) to find the max flow value $F$ on $G$.
-2. Increase the capacity of $e$ by 1: $c'(e) = c(e) + 1$.
-3. Run the max-flow algorithm on the modified network to find the new max flow value $F'$.
-4. If $F' == F + 1$, return `True`; otherwise, return `False`.
+We can decide this using a single run of the max-flow algorithm by analyzing reachability in the final residual graph $G_{f^*}$:
+1. Compute the maximum flow $f^*$ on $G$ using Dinic's algorithm.
+2. Build the residual graph $G_{f^*}$.
+3. Find $S^*$, the set of all vertices reachable from $s$ in $G_{f^*}$ (using BFS/DFS starting from $s$).
+4. Find $T^*$, the set of all vertices that can reach $t$ in $G_{f^*}$ (using BFS/DFS starting from $t$ on the reversed residual graph $G_{f^*}^{rev}$).
+5. For the designated edge $e = (u,v)$, check if:
+   $$u \in S^* \quad \text{and} \quad v \in T^*$$
+6. If both conditions are satisfied, return `True`; otherwise, return `False`.
 
 **Proof of Correctness:**
-By the Max-Flow Min-Cut Theorem, the value of the max flow equals the capacity of the min cut. If $e$ is in *every* min cut, then every min cut must contain $e$. Thus, increasing $c(e)$ by 1 increases the capacity of *every* min cut by 1. Consequently, the minimum cut capacity (and thus the max flow) must increase by exactly 1.
-If there is even one min cut $(S, T)$ that does not contain $e$, then the capacity of $(S, T)$ does not change when we increase $c(e)$. Thus, the max flow value will remain $F$, so $F' == F$.
+- By the Max-Flow Min-Cut Theorem, any minimum $s-t$ cut $(S, T)$ must satisfy $S^* \subseteq S$ and $T^* \subseteq T$.
+- **Direction 1 (If):** If $u \in S^*$ and $v \in T^*$, then for *any* minimum cut $(S, T)$, we must have $u \in S$ and $v \in T$. Since $u \in S$ and $v \in T$, the edge $e = (u,v)$ crosses the cut from $S$ to $T$. Thus, $e$ is in every minimum cut.
+- **Direction 2 (Only if):** Suppose $u \notin S^*$. We can define the cut $(S, T) = (S^*, V \setminus S^*)$, which is a minimum cut. Since $u \notin S^*$, we have $u \in T$, so $e = (u,v)$ does not cross this cut from $S$ to $T$. Thus, $e$ is not in this minimum cut, meaning it does not belong to *every* minimum cut. A symmetric argument holds if $v \notin T^*$ using the minimum cut $(V \setminus T^*, T^*)$.
 
 **Complexity:**
-- We run the max-flow algorithm twice.
-- Dinic's algorithm takes $O(|V|^2 |E|)$ time.
-- **Total Time Complexity:** $O(|V|^2 |E|)$ time.
+- Running Dinic's algorithm takes $O(|V|^2 |E|)$ time.
+- The BFS/DFS runs on $G_{f^*}$ and $G_{f^*}^{rev}$ take $O(|V| + |E|)$ time.
+- **Total Time Complexity:** $O(|V|^2 |E|)$ time (requires only a single max-flow execution).
 - **Total Space Complexity:** $O(|V| + |E|)$.
 
 ---
 
 ### Part c) [8 Points]
 **Algorithm Description:**
-An edge $e = (u,v)$ is in no min cut if and only if decreasing its capacity by a tiny amount $\epsilon > 0$ does not change the maximum flow value.
-1. Run a max-flow algorithm to find the max flow value $F$ on $G$.
-2. Check if $e$ is saturated (i.e. $f^*(e) == c(e)$). If $e$ is not saturated, then $e$ cannot belong to any min cut, so return `True`.
-3. If $e$ is saturated, we temporarily decrease its capacity: $c'(e) = c(e) - \epsilon$ (where $\epsilon = 0.5$ if capacities are integers).
-4. Run the max flow on this modified network to get $F'$.
-5. If $F' == F$, return `True`; otherwise, return `False`.
+An edge $e = (u,v)$ belongs to no minimum cut if and only if there is a path from $u$ to $v$ in the residual graph $G_{f^*}$:
+1. Compute the maximum flow $f^*$ on $G$ using Dinic's algorithm.
+2. Build the residual graph $G_{f^*}$.
+3. Run a BFS/DFS starting from $u$ in $G_{f^*}$ to determine if $v$ is reachable from $u$.
+4. If $v$ is reachable from $u$ in $G_{f^*}$, return `True`; otherwise, return `False`.
 
 **Proof of Correctness:**
-If $e$ is in some min cut $(S, T)$, then $e$ must cross the cut from $S$ to $T$. By definition, any edge crossing a min cut must be saturated, and decreasing its capacity by $\epsilon$ must decrease the cut's capacity (and thus the max flow) by $\epsilon$. If decreasing $c(e)$ does not change the max flow, then no min cut contains $e$.
+- **Direction 1 (If):** Suppose there is a directed path $P$ from $u$ to $v$ in the residual graph $G_{f^*}$. Every edge in $G_{f^*}$ has strictly positive residual capacity. If a cut $(S, T)$ has $u \in S$ and $v \in T$, the path $P$ must cross the cut from $S$ to $T$ along some edge with positive residual capacity. But for $(S, T)$ to be a minimum cut, all edges crossing from $S$ to $T$ must have residual capacity 0 in $G_{f^*}$. Thus, no minimum cut can have $u \in S$ and $v \in T$, meaning $e = (u,v)$ belongs to no minimum cut. (Note: This includes the case where $e$ is not saturated in $f^*$, since if $e$ is not saturated, the residual edge $u \rightarrow v$ exists, so $v$ is directly reachable from $u$).
+- **Direction 2 (Only if):** Suppose $v$ is not reachable from $u$ in $G_{f^*}$. We can define a set $S'$ of all vertices reachable from $u$ in $G_{f^*}$. Since $v$ is not reachable, $v \notin S'$. We can then extend this to define a minimum cut $(S, T)$ where $u \in S$ and $v \in T$. Thus, $e = (u,v)$ crosses this minimum cut, meaning it belongs to at least one minimum cut.
 
 **Complexity:**
-- **Total Time Complexity:** $O(|V|^2 |E|)$ time.
+- **Total Time Complexity:** $O(|V|^2 |E|)$ time (requires only a single max-flow execution).
 - **Total Space Complexity:** $O(|V| + |E|)$.
 
 ---
