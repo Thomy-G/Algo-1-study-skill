@@ -64,13 +64,20 @@ $$
 ### Part c) [7 Points]
 *Give the graph example with one negative edge where Dijkstra fails.*
 
-*Write your answer here:*
-
 ```mermaid
 flowchart TD
 u((u)) --"1"--> v((v))
 v --"-2"--> u
 ```
+
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Part c Score:</strong></td><td><strong style="color: #ef6c00;">3 / 7</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: #ef6c00;">
+    - <strong>Negative Cycle:</strong> Your graph contains a negative cycle ($u \rightarrow v \rightarrow u$ with weight $-1$). In SSSP, shortest paths are undefined (or $-\infty$) in the presence of negative cycles. Graders prefer counterexamples where shortest paths are well-defined (acyclic) but Dijkstra still fails due to greedy finalization.
+  </td></tr>
+</table>
+</div>
 
 ---
 
@@ -152,7 +159,7 @@ v --"-2"--> u
 | :--- | :--- | :--- | :--- | :--- |
 | **Q1a** | Matrix $M^2 = J$ | **6** | 6 | Correctly identified cross configuration with $2n-1$ ones. |
 | **Q1b** | Matrix $M^n$ Upper Tri. | **7** | 7 | Outstanding work. Correctly identified 2n-1 ones and proved why. |
-| **Q1c** | Dijkstra Counterexample | **0** | 7 | Unanswered |
+| **Q1c** | Dijkstra Counterexample | **3** | 7 | Graph contains a negative cycle; SSSP is undefined. |
 | **Q2a** | Tree Diameter Formula | **0** | 10 | Unanswered |
 | **Q2b** | Tree Diameter DP | **0** | 10 | Unanswered |
 | **Q3a** | MST is BST Proof | **0** | 10 | Unanswered |
@@ -161,4 +168,4 @@ v --"-2"--> u
 | **Q4b** | Cut Union / Intersect | **0** | 10 | Unanswered |
 | **Q5a** | Tail Quicksort Correctness | **0** | 5 | Unanswered |
 | **Q5b** | Tail Quicksort Expected Comp. | **0** | 15 | Unanswered |
-| **Total** | **Final Score** | **13** | **100** | **Grade: 13.0%** |
+| **Total** | **Final Score** | **16** | **100** | **Grade: 16.0%** |
