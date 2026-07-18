@@ -20,18 +20,17 @@ This means that the value of the M has to have a 1 in bot the same row and colum
 
 $$
 \displaylines{
-M^{2}_{ij} =  \bigvee_{k=1}^{n} (M_{ik} \land M_{kj}) \implies \forall i, j \exists k: M_{ik} = M_{kj} = 1 \implies \exists M_{ik} = M_{jk}^{T} = 1 \implies M \text{ symmetric}\\
-\text{The symmetic matrix with the least numbers is the identity Matrix } I_{n\times n}\\
-
+M^{2}_{ij} =  \bigvee_{k=1}^{n} (M_{ik} \land M_{kj}) \implies \forall i, j \exists k: M_{ik} = M_{kj} = 1 \implies \exists M_{ik} = M_{jk}^{T} = 1 \implies \\
+\text{We need the value at each row at column where there is some k where both are always 1}\\
 }
 $$
+Therefore we select a value $1\leq k\leq n$ where $\forall l\in[1,n]:M_{lk}=M_{kl}=1$ for example the cross where l = n/2 and we get for every case there number of 1s is 2n-1
 
 <div align="right">
 <table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
-  <tr><td><strong>Part a Score:</strong></td><td><strong style="color: #c62828;">0 / 6</strong></td></tr>
-  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: #c62828;">
-    - <strong>Incorrect Matrix:</strong> The identity matrix $I$ has $M^2 = I$, which has 1s only on the diagonal and is not entirely filled with 1s.<br>
-    - <strong>Logical Flaw:</strong> $M^2_{ij} = 1$ for all $i,j$ does not imply that $M$ is symmetric, nor that $M = I$ works. The minimum number of ones is $2n-1$.
+  <tr><td><strong>Part a Score:</strong></td><td><strong style="color: #2e7d32;">6 / 6</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: #2e7d32;">
+    - <strong>Correct Matrix & Proof:</strong> Successfully identified the optimal cross configuration with $2n-1$ ones and proved why it works.
   </td></tr>
 </table>
 </div>
@@ -130,7 +129,7 @@ $$
 
 | Part / Question | Description | Score | Max Points | Feedback |
 | :--- | :--- | :--- | :--- | :--- |
-| **Q1a** | Matrix $M^2 = J$ | **0** | 6 | Identity matrix fails the condition ($I^2 = I \ne J$). |
+| **Q1a** | Matrix $M^2 = J$ | **6** | 6 | Correctly identified cross configuration with $2n-1$ ones. |
 | **Q1b** | Matrix $M^n$ Upper Tri. | **0** | 7 | Unanswered |
 | **Q1c** | Dijkstra Counterexample | **0** | 7 | Unanswered |
 | **Q2a** | Tree Diameter Formula | **0** | 10 | Unanswered |
@@ -141,4 +140,4 @@ $$
 | **Q4b** | Cut Union / Intersect | **0** | 10 | Unanswered |
 | **Q5a** | Tail Quicksort Correctness | **0** | 5 | Unanswered |
 | **Q5b** | Tail Quicksort Expected Comp. | **0** | 15 | Unanswered |
-| **Total** | **Final Score** | **0** | **100** | **Grade: 0.0%** |
+| **Total** | **Final Score** | **6** | **100** | **Grade: 6.0%** |
