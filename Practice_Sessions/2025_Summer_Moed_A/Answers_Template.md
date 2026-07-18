@@ -140,8 +140,31 @@ If we continue this process until there are no more lighter edges we will both m
 ### Part a) [10 Points]
 *Prove or disprove: Max flow <= |E|/k in unit capacity networks.*
 
-*Write your answer here:*
+$$
+\displaylines{
+\text{Given that the shortest path is of length k then it means we are going to saturate the k edges}\\
+\text{in that path as an augmenting path, gaining 1 flow and loosing k capacity}\\
+\text{if we get that every path is k long (meaning all paths have minimum lenght) then we will}\\
+\text{exahust all of the edges in } \frac{|E|}{k} \text{ augmenting paths that give flow 1}\\
+\\
+\text{Altrernatively we can define the max flow as the amount of edges crossing the minimal cut (S,T)}\\
+\text{In this case the amount of edges is directly proportional to the amount of paths given the bottlneck}\\
+\text{is the value shared by all edges, which is 1}\\
+\text{Each augmenting path will have their own edge crossing the cut and because the longest path is of}\\
+\text{length k then the amount of crossing edges will again be }\\
+\frac{|E|}{k}
+}
+$$
 
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Part a Score:</strong></td><td><strong style="color: #ef6c00;">6 / 10</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: #ef6c00;">
+    - <strong>Good Intuition:</strong> You correctly identified that each path uses up at least $k$ edges. This is close to the Menger's Theorem proof (where max flow $F$ equals the number of edge-disjoint paths $P_1 \dots P_F$).<br>
+    - <strong>Lack of Rigor:</strong> Your explanation is too informal ("if we get that every path is k long", which is not necessarily true). To make it rigorous, you must state that since the paths are edge-disjoint, the sum of their edge counts is at most $|E|$, yielding $F \cdot k \le \sum |E(P_i)| \le |E| \implies F \le |E|/k$.
+  </td></tr>
+</table>
+</div>
 
 ---
 
@@ -182,8 +205,8 @@ If we continue this process until there are no more lighter edges we will both m
 | **Q2b** | Tree Diameter DP | **0** | 10 | Unanswered |
 | **Q3a** | MST is BST Proof | **4** | 10 | Informal exchange argument with mathematical inaccuracies. |
 | **Q3b** | BST Tester $O(V+E)$ | **0** | 10 | Unanswered |
-| **Q4a** | Max Flow $\le \|E\|/k$ | **0** | 10 | Unanswered |
+| **Q4a** | Max Flow $\le \|E\|/k$ | **6** | 10 | Correct path-based intuition but lacked mathematical rigor. |
 | **Q4b** | Cut Union / Intersect | **0** | 10 | Unanswered |
 | **Q5a** | Tail Quicksort Correctness | **0** | 5 | Unanswered |
 | **Q5b** | Tail Quicksort Expected Comp. | **0** | 15 | Unanswered |
-| **Total** | **Final Score** | **24** | **100** | **Grade: 24.0%** |
+| **Total** | **Final Score** | **30** | **100** | **Grade: 30.0%** |
