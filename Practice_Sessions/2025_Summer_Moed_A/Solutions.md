@@ -24,13 +24,12 @@ The boolean matrix product $M^2[i,j] = 1$ if and only if there exists some index
 
 ### Part b) [7 Points]
 **Matrix Description:**
-The condition $M^n[i,j] = 1$ for $j \ge i$ means that there is a path of length $n$ from $i$ to $j$ for all $j \ge i$.
-- We can achieve this with a simple path of length $n-1$: $1 \rightarrow 2 \rightarrow 3 \rightarrow \dots \rightarrow n$, and adding a self-loop on the last node $(n,n)$.
-- This requires exactly $n$ edges:
-  - $(i, i+1)$ for $1 \le i \le n-1$.
-  - $(n, n)$.
-- From any $i$, we can reach $j \ge i$ in exactly $j-i$ steps, and then use the self-loop at $n$ to pad the path to length $n$.
-- Thus, the minimum number of 1s is $n$.
+The condition $M^n[i,j] = 1$ for all $j \ge i$ means that there is a walk of length exactly $n$ from $i$ to $j$ for all $j \ge i$, and no such walk for $j < i$.
+- To have $M^n[i,i] = 1$ for all $i$, there must be a walk of length $n$ from $i$ to itself. Since the graph must be acyclic (to prevent paths to $j < i$), the only cycles can be self-loops. Thus, there must be a self-loop on **every** vertex $i$, requiring $n$ ones on the main diagonal.
+- To have $M^n[i, i+1] = 1$, we must have the directed edge $(i, i+1)$ for all $1 \le i \le n-1$, requiring $n-1$ ones on the superdiagonal.
+- Combining these, $M$ has 1s on the main diagonal and the superdiagonal, giving a total of **$2n - 1$ ones**.
+- From any $i$, we can reach $j \ge i$ by traversing the path edges $i \rightarrow i+1 \rightarrow \dots \rightarrow j$ (taking $j-i$ steps) and then using the self-loops at $i$ and/or $j$ to spend the remaining $n - (j-i)$ steps.
+- Thus, the minimum number of 1s is $2n - 1$.
 
 ---
 
