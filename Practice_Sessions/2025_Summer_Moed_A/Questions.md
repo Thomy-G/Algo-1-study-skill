@@ -6,8 +6,8 @@ Welcome to the practice session for **2025 Summer Moed A**. Below are the 5 ques
 
 ## Question 1: Matrix Invariants & Graph Reductions (20 Points)
 
-*   **a) [6 Points]** Describe a boolean matrix $M$ of size $n 	imes n$ containing the **minimum possible number of 1s**, such that its boolean square $M^2 = M 	imes M$ is entirely filled with 1s (i.e., for all $i, j$: $M^2[i,j] = 1$). Prove your answer.
-*   **b) [7 Points]** Describe a boolean matrix $M$ of size $n 	imes n$ containing the **minimum possible number of 1s**, such that its $n$-th power $M^n$ is upper-triangular of 1s (i.e., for all $i, j$: if $j \ge i$ then $M^n[i,j] = 1$, else $M^n[i,j] = 0$). Prove your answer.
+*   **a) [6 Points]** Describe a boolean matrix $M$ of size $n \times n$ containing the **minimum possible number of 1s**, such that its boolean square $M^2 = M \times M$ is entirely filled with 1s (i.e., for all $i, j$: $M^2[i,j] = 1$). Prove your answer.
+*   **b) [7 Points]** Describe a boolean matrix $M$ of size $n \times n$ containing the **minimum possible number of 1s**, such that its $n$-th power $M^n$ is upper-triangular of 1s (i.e., for all $i, j$: if $j \ge i$ then $M^n[i,j] = 1$, else $M^n[i,j] = 0$). Prove your answer.
     *(Hint for a & b: Translate the matrix powers into paths in a directed graph).*
 *   **c) [7 Points]** Give an example of a directed graph $G = (V,E)$ containing exactly **one negative-weight edge**, and two vertices $u, v \in V$, such that running Dijkstra's SSSP algorithm from $u$ fails to find the correct shortest path distance to $v$.
 
