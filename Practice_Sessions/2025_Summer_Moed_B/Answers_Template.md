@@ -48,7 +48,7 @@ $$
 *Describe the algorithm for min cut with minimum edges, and explain correctness.*
 
 *Write your answer here:*
-
+All of the minimum cuts have the same capacity
 
 ---
 
@@ -65,8 +65,17 @@ $$
 
 *Describe the O(|V|+|E|) bottleneck path algorithm and explain correctness.*
 
-*Write your answer here:*
+Given the time complexity the only traversal algorithms available to us are BFS and DFS, we will use them from s to find all possible paths to t and keep track of the heaviest weight of each path and then compare the highest weight of each of them and take the minimum as our bottleneck
 
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Question 3 Score:</strong></td><td><strong style="color: #c62828;">2 / 15</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: #c62828;">
+    - <strong>Exponential Complexity:</strong> Finding all paths takes $O(2^{|V|})$ time in the worst case (since the number of paths in a DAG can be exponential), which violates the $O(|V| + |E|)$ constraint.<br>
+    - <strong>Missing DP & Topological Sort:</strong> To achieve $O(|V| + |E|)$, you must process the vertices in topological order and use Dynamic Programming: $DP[v] = \min(DP[v], \max(DP[u], w(u,v)))$.
+  </td></tr>
+</table>
+</div>
 
 ---
 
@@ -104,8 +113,8 @@ $$
 | **Q1a** | Vertex Capacities | **9** | 13 | Correct reduction & complexity; notation typos & source/sink details missing. |
 | **Q1b** | Min Cut Min Edges | **0** | 12 | Unanswered |
 | **Q2** | Dynamic MST | **0** | 20 | Unanswered |
-| **Q3** | Bottleneck DAG | **0** | 15 | Unanswered |
+| **Q3** | Bottleneck DAG | **2** | 15 | Exponential time complexity due to finding all paths. |
 | **Q4** | Egg Dropping DP | **0** | 20 | Unanswered |
 | **Q5a** | Secretary K=1 | **0** | 10 | Unanswered |
 | **Q5b** | Secretary K >= 1 | **0** | 10 | Unanswered |
-| **Total** | **Final Score** | **9** | **100** | **Grade: 9.0%** |
+| **Total** | **Final Score** | **11** | **100** | **Grade: 11.0%** |
