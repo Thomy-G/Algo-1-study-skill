@@ -88,6 +88,12 @@ v --"-2"--> u
 
 *Write your answer here:*
 
+$$
+\displaylines{
+\text{Given that this is a tree there aren't 2 paths to the same vertex that doesn't pass from the root }\\
+\text{From any vertex the max distance between 2 }
+}
+$$
 
 ---
 
@@ -104,8 +110,20 @@ v --"-2"--> u
 ### Part a) [10 Points]
 *Prove that every MST is a BST.*
 
-*Write your answer here:*
+The heaviest edge of a spanning tree is the edge (u,v) with weight w for which every other edge in the ST is smaller than it, there are 2 cases:
+Assume there are k edges in the ST and the edge with the highest weight, edge k is also the kth heaviest edge in the original graph, trivially trying to replace it would increase the weight of the heaviest edge which trivially shows there is no improvement
+Now assume that edge k is not the kth heaviest edge in the original graph, this means there exists an edge j that is less heavy than k, given that this is a spanning tree adding any other edge would form a cycle, therefore if we add j and take out k we will either make a cycle or find a new ST that minimizes the bottleneck value of the BST therefore being the new BST and also minimizing the weight of the spanning tree.
+If we continue this process until there are no more lighter edges we will both minimize the weight of the spanning tree and also of the bottleneck value, therefore making both the MST and BST
 
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Part a Score:</strong></td><td><strong style="color: #ef6c00;">4 / 10</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: #ef6c00;">
+    - <strong>Lack of Rigor:</strong> A spanning tree always has $n-1$ edges (not $k$). The case division using the "kth heaviest edge in the original graph" is mathematically unclear and incorrect.<br>
+    - <strong>Incomplete Exchange Proof:</strong> The exchange argument does not formally show why the MST's bottleneck is minimal. A cut-based proof is much cleaner and standard.
+  </td></tr>
+</table>
+</div>
 
 ---
 
@@ -162,10 +180,10 @@ v --"-2"--> u
 | **Q1c** | Dijkstra Counterexample | **7** | 7 | Correct counterexample with 2 edges (contains a negative cycle). |
 | **Q2a** | Tree Diameter Formula | **0** | 10 | Unanswered |
 | **Q2b** | Tree Diameter DP | **0** | 10 | Unanswered |
-| **Q3a** | MST is BST Proof | **0** | 10 | Unanswered |
+| **Q3a** | MST is BST Proof | **4** | 10 | Informal exchange argument with mathematical inaccuracies. |
 | **Q3b** | BST Tester $O(V+E)$ | **0** | 10 | Unanswered |
 | **Q4a** | Max Flow $\le \|E\|/k$ | **0** | 10 | Unanswered |
 | **Q4b** | Cut Union / Intersect | **0** | 10 | Unanswered |
 | **Q5a** | Tail Quicksort Correctness | **0** | 5 | Unanswered |
 | **Q5b** | Tail Quicksort Expected Comp. | **0** | 15 | Unanswered |
-| **Total** | **Final Score** | **20** | **100** | **Grade: 20.0%** |
+| **Total** | **Final Score** | **24** | **100** | **Grade: 24.0%** |
