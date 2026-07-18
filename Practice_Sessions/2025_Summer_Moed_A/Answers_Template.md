@@ -9,8 +9,32 @@ Please write your answers in the designated placeholders below. When you are fin
 ### Part a) [6 Points]
 *Describe the matrix M with minimal 1s where M^2 is all 1s, and prove correctness.*
 
-*Write your answer here:*
+$$
+\displaylines{
+\text{For binary matrices:}\\
+A \cdot B = C \implies C_{ij} = \bigvee_{k=1}^{n} (A_{ik} \land B_{kj})
+}
+$$
 
+This means that the value of the M has to have a 1 in bot the same row and column
+
+$$
+\displaylines{
+M^{2}_{ij} =  \bigvee_{k=1}^{n} (M_{ik} \land M_{kj}) \implies \forall i, j \exists k: M_{ik} = M_{kj} = 1 \implies \exists M_{ik} = M_{jk}^{T} = 1 \implies M \text{ symmetric}\\
+\text{The symmetic matrix with the least numbers is the identity Matrix } I_{n\times n}\\
+
+}
+$$
+
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Part a Score:</strong></td><td><strong style="color: #c62828;">0 / 6</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: #c62828;">
+    - <strong>Incorrect Matrix:</strong> The identity matrix $I$ has $M^2 = I$, which has 1s only on the diagonal and is not entirely filled with 1s.<br>
+    - <strong>Logical Flaw:</strong> $M^2_{ij} = 1$ for all $i,j$ does not imply that $M$ is symmetric, nor that $M = I$ works. The minimum number of ones is $2n-1$.
+  </td></tr>
+</table>
+</div>
 
 ---
 
@@ -101,3 +125,20 @@ Please write your answers in the designated placeholders below. When you are fin
 
 
 ---
+
+## 📊 Exam Tally & Final Score
+
+| Part / Question | Description | Score | Max Points | Feedback |
+| :--- | :--- | :--- | :--- | :--- |
+| **Q1a** | Matrix $M^2 = J$ | **0** | 6 | Identity matrix fails the condition ($I^2 = I \ne J$). |
+| **Q1b** | Matrix $M^n$ Upper Tri. | **0** | 7 | Unanswered |
+| **Q1c** | Dijkstra Counterexample | **0** | 7 | Unanswered |
+| **Q2a** | Tree Diameter Formula | **0** | 10 | Unanswered |
+| **Q2b** | Tree Diameter DP | **0** | 10 | Unanswered |
+| **Q3a** | MST is BST Proof | **0** | 10 | Unanswered |
+| **Q3b** | BST Tester $O(V+E)$ | **0** | 10 | Unanswered |
+| **Q4a** | Max Flow $\le \|E\|/k$ | **0** | 10 | Unanswered |
+| **Q4b** | Cut Union / Intersect | **0** | 10 | Unanswered |
+| **Q5a** | Tail Quicksort Correctness | **0** | 5 | Unanswered |
+| **Q5b** | Tail Quicksort Expected Comp. | **0** | 15 | Unanswered |
+| **Total** | **Final Score** | **0** | **100** | **Grade: 0.0%** |
