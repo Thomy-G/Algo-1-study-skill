@@ -142,17 +142,21 @@ Thus, the max flow is at most $|E|/k$. $\blacksquare$
 ### Part b) [10 Points]
 **Proof:**
 Let $f^*$ be a maximum flow in $G$.
-1. By the Max-Flow Min-Cut Theorem, for any min cut $(S, T)$, no flow can go from $T$ to $S$, and all edges from $S$ to $T$ must be fully saturated.
-2. Let $(S, T)$ and $(S', T')$ be two min cuts.
-3. The capacity of $(S \cup S', T \cap T')$ is:
-   $$c(S \cup S', T \cap T') = c(S) + c(S') - c(S \cap S') - \text{flow}(T \setminus T' \rightarrow S \setminus S') \dots$$
-   Using submodularity of cut capacities:
+1. Let $(S, T)$ and $(S', T')$ be two minimum $(s,t)$-cuts in $G$. By the Max-Flow Min-Cut Theorem, their capacities are exactly equal to the maximum flow value:
+   $$c(S) = c(S') = |f^*|$$
+2. Since $(S, T)$ and $(S', T')$ are valid $s-t$ cuts, we have $s \in S$ and $s \in S'$, which implies $s \in S \cap S'$ and $s \in S \cup S'$. Similarly, $t \notin S$ and $t \notin S'$, which implies $t \notin S \cap S'$ and $t \notin S \cup S'$.
+   Therefore, both $(S \cap S', V \setminus (S \cap S'))$ and $(S \cup S', V \setminus (S \cup S'))$ are valid $(s,t)$-cuts in $G$.
+3. By Weak Duality, the capacity of any valid $(s,t)$-cut is at least the maximum flow value $|f^*|$:
+   $$c(S \cap S') \ge |f^*| \quad \text{and} \quad c(S \cup S') \ge |f^*|$$
+4. We utilize the **submodularity** property of cut capacities, which states that for any two vertex subsets $S, S'$:
    $$c(S \cup S') + c(S \cap S') \le c(S) + c(S')$$
-4. Since $c(S) = c(S') = f^*$, and any valid cut has capacity at least $f^*$, we must have $c(S \cap S') \ge f^*$.
-5. Thus:
-   $$c(S \cup S') \le c(S) + c(S') - c(S \cap S') \le f^* + f^* - f^* = f^*$$
-6. Since the capacity of any cut is at least $f^*$, the capacity of $S \cup S'$ must be exactly $f^*$.
-Thus, $(S \cup S', T \cap T')$ is also a minimum cut. $\blacksquare$
+5. Substituting $c(S) = c(S') = |f^*|$ into the submodularity inequality, we get:
+   $$c(S \cup S') + c(S \cap S') \le 2|f^*|$$
+6. Since $c(S \cap S') \ge |f^*|$ (from step 3), we can subtract it from both sides:
+   $$c(S \cup S') \le 2|f^*| - c(S \cap S') \le 2|f^*| - |f^*| = |f^*|$$
+7. Since we also have $c(S \cup S') \ge |f^*|$, it must hold that:
+   $$c(S \cup S') = |f^*|$$
+Therefore, $(S \cup S', T \cap T')$ is indeed a minimum $(s,t)$-cut in $G$. $\blacksquare$
 
 ---
 
