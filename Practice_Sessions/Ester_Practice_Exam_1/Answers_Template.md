@@ -125,7 +125,49 @@ $$
 
 ## Question 5 [20 Points]
 
-*Write your answer here:*
+$$
+\displaylines{
+2x_{1}+x_{2}\leq8\\
+x_{1}+3x_{2} \leq 9\\
+x_{1}\geq 0, x_{2} \geq 0\\
+}
+$$
+
+$$
+\displaylines{
+\text{By the original equations, there are intersection points at}\\
+2x_{1}+0 = 8 \implies x_{1} = 4 \\
+0 + x_{2} = 8\\
+(4,0), (0,8)\\
+x_{1}+ 0 = 9\\
+0+3x_{2}=9 \implies x_{2} = 3\\
+(9,0),(0,3)\\
+\\
+\begin{cases}
+2x_{1}+x_{2} =8 \\
+x_{1}+3x_{2}=9
+\end{cases}\\
+2x_{1}+6x_{2} = 18\\
+2x_{1}-2x_{1}+6x_{2}-x_{2} = 18-8\\
+5x_{2}=10\\
+x_{2}=2\\
+x_{1}=3\\
+Z(4,0) = $40(4) + $50(0)= $160\\
+Z(3,2) = $40(3) + $50(2)=$220\\
+Z(0,8) = $40(0) + $50(8)=$400\\
+\text{Best 0X, 8Y at 400 dollars}
+}
+$$
+
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Question 5 Score:</strong></td><td><strong style="color: #c62828;">12 / 20</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: #c62828;">
+    - <strong>Correct Formulation and Intersections:</strong> You correctly formulated the LP and calculated all the line intersections.<br>
+    - <strong>Feasibility Error (-8):</strong> The point (0,8) is infeasible because it violates the labor constraint: 0 + 3(8) = 24 > 9. You must test all intersections against all inequalities to verify they lie in the feasible region. The correct feasible vertices are (0,0), (4,0), (3,2), and (0,3). Thus, the optimal plan is to produce 3 units of X and 2 units of Y for a max profit of $220.
+  </td></tr>
+</table>
+</div>
 
 
 ---
@@ -138,5 +180,5 @@ $$
 | **Q2** | Arithmetic Progressions via FFT | **18** | 20 | Excellent polynomial squaring and coefficient counting. Small typos in description. |
 | **Q3** | Dynamic MST Weight Increase | **14** | 20 | Correct cut split logic, but scanned tree edges instead of graph edges. |
 | **Q4** | Universal Hashing Collision Bounds | **16** | 20 | Correct expected collisions computation, but omitted the Markov's Inequality step. |
-| **Q5** | Linear Programming & Geometry | **0** | 20 | Unanswered |
-| **Total** | **Final Score** | **52** | **100** | **Grade: 52.0%** |
+| **Q5** | Linear Programming & Geometry | **12** | 20 | Correct LP formulation, but selected infeasible point (0,8) as optimal solution. |
+| **Total** | **Final Score** | **64** | **100** | **Grade: 64.0%** |
