@@ -6,7 +6,7 @@
 Let $G = (V, E)$ be a directed flow network with a source $s$, a sink $t$, and integer edge capacities $c(e) > 0$ for all $e \in E$. 
 Suppose we want to find a vertex $v \in V \setminus \{s, t\}$ whose deletion from the graph (along with all its incoming and outgoing edges) reduces the maximum flow value from $s$ to $t$ by the largest amount.
 
-*   **Your Task:** Describe an algorithm to find such a vertex $v$ that runs in $O(|V| \cdot (|V| + |E|))$ time or better. Prove its correctness and analyze its complexity.
+*   **Your Task:** Describe an algorithm to find such a vertex $v$ that runs in $O(|V|^2 |E|)$ time. Prove its correctness and analyze its complexity.
 
 ---
 
