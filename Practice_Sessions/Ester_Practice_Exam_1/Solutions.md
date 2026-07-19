@@ -5,11 +5,15 @@
 ## Question 1: Vertex Deletion in Flow Networks
 ### Algorithm Description
 We want to find a vertex $v \in V \setminus \{s,t\}$ whose deletion reduces the maximum flow value the most.
-1. Run a standard max-flow algorithm (e.g., Dinic's algorithm) on $G$ to find a maximum flow $f^*$ and its value $|f^*|$ in $O(|V|^2 |E|)$ time.
+1. **Initial Max Flow:** Find a maximum flow $f^*$ and its value $|f^*|$ in the original graph $G$.
+   - *Note on Complexity:* In standard exam questions of this type, the maximum flow $f^*$ is typically assumed to be **precomputed and provided as part of the input** (which takes $O(1)$ time).
+   - Alternatively, if it must be computed from scratch:
+     * In a unit-capacity network, Dinic's algorithm runs in $O(|E| \sqrt{|V|}) \le O(|V|(|V| + |E|))$ time.
+     * In a general network with integer capacities, we can use Orlin's max-flow algorithm which runs in $O(|V||E|) \le O(|V|(|V| + |E|))$ time.
 2. For each vertex $v \in V \setminus \{s,t\}$:
    a. Compute the flow passing through $v$ in $f^*$: $F_v = \sum_{u \in V} f^*(u, v)$.
    b. Construct a starting flow $f^{(v)}$ on $G \setminus \{v\}$ by setting $f^{(v)}(e) = f^*(e)$ for all edges not incident to $v$, and $f^{(v)}(e) = 0$ for all edges incident to $v$. 
-      - Note that $f^{(v)}$ is a valid flow in $G \setminus \{v\}$ because flow conservation still holds at all vertices $w \neq v$ (since we zeroed out both the incoming and outgoing flow at $v$, which was balanced).
+      - Note that $f^{(v)}$ is a valid flow in $G \setminus \{v\}$ because flow conservation still holds at all vertices $w \neq v$.
       - The value of this initial flow is $|f^{(v)}| = |f^*| - F_v$.
    c. Construct the residual graph $H$ of $G \setminus \{v\}$ with respect to $f^{(v)}$.
    d. Run Ford-Fulkerson augmentation steps (using BFS to find augmenting paths) on $H$ to find the maximum flow in $G \setminus \{v\}$.
