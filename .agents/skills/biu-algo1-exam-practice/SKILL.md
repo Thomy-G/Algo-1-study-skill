@@ -93,7 +93,8 @@ Act like a strict university grader:
        </table>
        </div>
        ```
-       *Note: Use color `#c62828` (red) for <70%, `#e65100` (orange) for 70%-90%, and `#2e7d32` (green) for >=90%.*
+       *Note 1: Use color `#c62828` (red) for <70%, `#e65100` (orange) for 70%-90%, and `#2e7d32` (green) for >=90%.*<br/>
+       *Note 2: Markdown engines often fail to render LaTeX math (e.g. $F_v$ or $\ge$) when nested inside HTML table cells. Therefore, always use clean Unicode characters, HTML subscripts, superscripts, or plain text instead of LaTeX inside these HTML badges (e.g. use F_v, x<sup>2b</sup>, ≥, ∈, ≠).*
      - **Final Tally Table**: Add a markdown table at the very end of the file under a `## 📊 Exam Tally & Final Score` header, displaying the part name, description, score, max points, and feedback comment for each part, followed by a total score row and final grade percentage.
   2. **Provide Chat Report**: Post a structured diagnostic report in the chat:
      * **Score**: [Points Earned] / [Max Points]
