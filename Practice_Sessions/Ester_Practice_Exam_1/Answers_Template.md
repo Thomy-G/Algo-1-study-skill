@@ -96,7 +96,29 @@ The time complexity will be O(|V|+|E|)
 
 ## Question 4 [20 Points]
 
-*Write your answer here:*
+Because this is an universal family of hashes we know that the chance of a collision is 1/m
+$$
+\displaylines{
+\text{We will denote } X_{ij} : i\neq j=\begin{cases}
+1 & h(x_{i}) = h(x_{j}) \\
+0 & otherwise
+\end{cases}\\
+\mathbb{E}[X_{ij}] = \frac{1}{m} = \frac{1}{n^{2}}\\
+\text{The chance of hitting 1 of i objects already in the table would be } \frac{i}{m} = \frac{i}{n^{2}}\\
+ \mathbb{E}\left[ \sum_{i=0}^{n-1}X_{ij} \right] = \sum_{i=0}^{n-1} \mathbb{E}[X_{ij}] = \sum_{i=0}^{n-1} \frac{i}{n^{2}} = \frac{1}{n^{2}}\sum_{i=0}^{n-1} i = \frac{1}{n^{2}} \cdot \frac{n(n-1)}{2} \\
+ \text{as n goes to infinity this goes to } \frac{1}{2} 
+}
+$$
+
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Question 4 Score:</strong></td><td><strong style="color: #e65100;">16 / 20</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: #e65100;">
+    - <strong>Correct expectation calculation:</strong> You correctly modeled the indicator variables X_ij and computed the expected number of collisions E[X] = n(n-1) / 2n².<br>
+    - <strong>Missing Markov Link (-4):</strong> You omitted the crucial probability bound step. To show that the probability of at least one collision (P(X ≥ 1)) is ≤ 1/2, you must apply Markov's Inequality: P(X ≥ 1) ≤ E[X] ≤ n(n-1)/2n² < 1/2.
+  </td></tr>
+</table>
+</div>
 
 
 ---
@@ -115,6 +137,6 @@ The time complexity will be O(|V|+|E|)
 | **Q1** | Vertex Deletion in Flow Networks | **4** | 20 | Run Dinic's once, but greedy heuristic (heaviest edge endpoint deletion) is incorrect. |
 | **Q2** | Arithmetic Progressions via FFT | **18** | 20 | Excellent polynomial squaring and coefficient counting. Small typos in description. |
 | **Q3** | Dynamic MST Weight Increase | **14** | 20 | Correct cut split logic, but scanned tree edges instead of graph edges. |
-| **Q4** | Universal Hashing Collision Bounds | **0** | 20 | Unanswered |
+| **Q4** | Universal Hashing Collision Bounds | **16** | 20 | Correct expected collisions computation, but omitted the Markov's Inequality step. |
 | **Q5** | Linear Programming & Geometry | **0** | 20 | Unanswered |
-| **Total** | **Final Score** | **36** | **100** | **Grade: 36.0%** |
+| **Total** | **Final Score** | **52** | **100** | **Grade: 52.0%** |
