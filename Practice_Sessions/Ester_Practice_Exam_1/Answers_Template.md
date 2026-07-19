@@ -10,17 +10,11 @@ Given that the graph has all positive capacities we are trying to take the edges
 We can get the min cut max flow and take the edges that have the most flow in all of the cuts.
 We will run dinics algorithm to find the max flow min cut of the network, from this we will get the residual graph $G_{f}$ that contains the vertices and non saturated edges, we will run bfs from s to find the vertices that have saturated edges and we will take the edge with the highest capacity and take either of the vertices that are part of that edge, thus we will take the heaviest saturated edge
 
-<div align="right">
-<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
-  <tr><td><strong>Question 1 Score:</strong></td><td><strong style="color: #ef5350;">4 / 20</strong></td></tr>
-  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: #ef5350;">
-    - <strong>Good Start:</strong> Running Dinic's algorithm first is correct.<br>
-    - <strong>Incorrect Greedy Heuristic:</strong> Deleting an endpoint of the heaviest saturated edge crossing the min-cut does not guarantee the maximum flow reduction. 
-      <em>Counterexample:</em> If all flow must pass through a single bottleneck vertex $z$ upstream, deleting $z$ reduces the max flow to 0. However, the heaviest saturated edge crossing the min-cut $(a,b)$ might have capacity less than the total flow, so deleting $a$ or $b$ would only reduce the flow partially, making $z$ the optimal deletion instead.<br>
-    - <strong>Missing Systematic Evaluation:</strong> To find the correct vertex, you must systematically evaluate the new max flow for each candidate $v \in V \setminus \{s,t\}$ by zeroing its flow and running augmenting paths in the residual graph of $G \setminus \{v\}$.
-  </td></tr>
-</table>
-</div>
+> ### 🎓 Q1 Grade: 4 / 20
+> *   **Good Start:** Running Dinic's algorithm first is correct.
+> *   **Incorrect Greedy Heuristic:** Deleting an endpoint of the heaviest saturated edge crossing the min-cut does not guarantee the maximum flow reduction. 
+>     *   *Counterexample:* If all flow must pass through a single bottleneck vertex $z$ upstream, deleting $z$ reduces the max flow to 0. However, the heaviest saturated edge crossing the min-cut $(a,b)$ might have capacity less than the total flow, so deleting $a$ or $b$ would only reduce the flow partially, making $z$ the optimal deletion instead.
+> *   **Missing Systematic Evaluation:** To find the correct vertex, you must systematically evaluate the new max flow for each candidate $v \in V \setminus \{s,t\}$ by zeroing its flow and running augmenting paths in the residual graph of $G \setminus \{v\}$.
 
 
 ---
@@ -62,16 +56,10 @@ $$
 }
 $$
 
-<div align="right">
-<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
-  <tr><td><strong>Question 2 Score:</strong></td><td><strong style="color: #2e7d32;">18 / 20</strong></td></tr>
-  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: #2e7d32;">
-    - <strong>Excellent Solution!</strong> Your identification of the polynomial squaring and checking the coefficient of $x^{2b}$ is completely correct.<br>
-    - <strong>Correct Coefficient Logic:</strong> You correctly identified that for $b \in A$, the trivial pair $(b,b)$ contributes $1$ to the coefficient of $x^{2b}$, while any non-trivial AP pair $(a,c)$ with $a \neq c$ contributes $2$ (due to symmetry: $a+c$ and $c+a$). Thus, an AP exists if and only if the coefficient of $x^{2b}$ is $\ge 3$.<br>
-    - <strong>Minor Terminology/Typo Deductions (-2):</strong> You used "divided by 3" instead of "divided by 2" when describing the search in lines 47-49 (which you correctly formulated as "half of i" in the proof). Also, "power of that coefficient" is a translation slip for the <em>exponent of that term</em> (Hebrew: חזקה).
-  </td></tr>
-</table>
-</div>
+> ### 🎓 Q2 Grade: 18 / 20
+> *   **Excellent Solution!** Your identification of the polynomial squaring ($C(x) = A^2(x)$) using FFT to find sums of elements in $A$ is completely correct.
+> *   **Correct Coefficient Logic:** You correctly identified that for $b \in A$, the trivial pair $(b,b)$ contributes $1$ to the coefficient of $x^{2b}$, while any non-trivial AP pair $(a,c)$ with $a \neq c$ contributes $2$ (due to symmetry: $a+c$ and $c+a$). Thus, an AP exists if and only if the coefficient of $x^{2b}$ is $\ge 3$.
+> *   **Minor Terminology/Typo Deductions (-2):** You used "divided by 3" instead of "divided by 2" when describing the search in lines 47-49 (which you correctly formulated as "half of i" in the proof). Also, "power of that coefficient" is a translation slip for the *exponent of that term* (Hebrew: חזקה).
 
 
 ---
