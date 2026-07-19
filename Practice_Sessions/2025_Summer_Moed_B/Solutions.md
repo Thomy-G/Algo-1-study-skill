@@ -121,4 +121,6 @@ For $K$ positions, a candidate is hired if and only if she is among the top $K$ 
 - For $i \le K$, every candidate is hired (so $E[X_i] = 1$ for $i \le K$).
 - For $i > K$, the probability that the $i$-th candidate is among the top $K$ of the first $i$ is exactly $K/i$.
 - The total expected number of replacements is:
-  $$E[X] = \sum_{i=1}^K 1 + \sum_{i=K+1}^N rac{K}{i} = K + K \sum_{i=K+1}^N rac{1}{i} = K \left( 1 + H_N - H_K ight) pprox K \left(1 + \lnrac{N}{K}ight)$$
+  $$E[X] = \sum_{i=1}^K 1 + \sum_{i=K+1}^N rac{K}{i} = K + K \sum_{i=K+1}^N rac{1}{i} = K \left( 1 + H_N - H_K 
+ight) pprox K \left(1 + \lnrac{N}{K}
+ight)$$

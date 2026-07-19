@@ -35,7 +35,11 @@ Please write your answers in the designated placeholders below. When you are fin
 ### Part a) [10 Points]
 *Analyze expected and w.h.p. runtimes.*
 
-*Write your answer here:*
+$$
+\displaylines{
+
+}
+$$
 
 
 ---

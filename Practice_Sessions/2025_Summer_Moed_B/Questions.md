@@ -14,8 +14,7 @@ Welcome to the practice session for **2025 Summer Moed B**. Below are the 5 ques
 ## Question 2: Dynamic MST Edge Weight Decrease (20 Points)
 
 Let $G=(V,E)$ be a connected, undirected graph with distinct edge weights, and let $T$ be its unique Minimum Spanning Tree (MST).
-Suppose we decrease the weight of a single edge $e_0 
-otin T$ to a new weight $w'(e_0) < w(e_0)$.
+Suppose we decrease the weight of a single edge $e_0 \notin T$ to a new weight $w'(e_0) < w(e_0)$.
 
 *   **Your Task:** Describe an algorithm, as efficient as possible, to find the new MST of the graph after this change. Prove the correctness of your algorithm and analyze its complexity.
 

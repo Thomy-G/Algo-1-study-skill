@@ -83,7 +83,7 @@ Given the time complexity the only traversal algorithms available to us are BFS 
 
 *Describe the recursive formula, DP algorithm, and analyze complexities.*
 
-*Write your answer here:*
+
 
 
 ---
@@ -93,7 +93,12 @@ Given the time complexity the only traversal algorithms available to us are BFS 
 ### Part a) [10 Points]
 *Calculate the expected number of replacements for K=1.*
 
-*Write your answer here:*
+ Let $X_i$ be the indicator variable that candidate $i$ (for $i \ge 2$) is hired.
+    *   Candidate $i$ is hired if and only if they are the best among the first $i$ candidates seen.
+    *   Since candidates arrive in random order, any of the first $i$ candidates is equally likely to be the best, so $\Pr(X_i = 1) = 1/i$.
+    *   By Linearity of Expectation, the expected number of replacements is:
+        $$E[R] = \sum_{i=2}^n E[X_i] = \sum_{i=2}^n \frac{1}{i} = \mathbf{H_n - 1}$$
+
 
 
 ---
@@ -101,8 +106,15 @@ Given the time complexity the only traversal algorithms available to us are BFS 
 ### Part b) [10 Points]
 *Calculate the expected number of replacements for K >= 1.*
 
-*Write your answer here:*
-
+Based on the last part, we will assume that we will hire the first K secretaries without checking
+Let $X_{i}$ be the indicator vairable that the i (for $i\geq K$) is hired.
+Candidate i is hired if and only if it is at least the Kth best among the first i candidates seen.
+$Pr(X_{i}=1)=\frac{K}{i}$
+$$
+\displaylines{
+E[R] = \sum_{i=K+1}^{n} E[X_{i}] =  \sum_{i=K+1}^{n} \frac{K}{i} = K \sum_{i=K+1}^{n} \frac{1}{i} = K(H_{n}-H_{K})
+}
+$$
 
 ---
 

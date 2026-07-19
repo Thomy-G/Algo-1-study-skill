@@ -52,6 +52,16 @@ The total **value** of the flow is defined as $|f| = \sum_{v \in V} f(s, v)$. To
     A **minimum $(s, t)$-cut** is an $(s, t)$-cut $(S, T)$ whose capacity is the minimum among all possible $(s, t)$-cuts in the graph:
     $$c(S, T) \le c(S', T') \quad \text{for all } (s, t)\text{-cuts } (S', T')$$
     *(Intuitively, it represents the absolute smallest capacity bottleneck that completely disconnects all directed paths from $s$ to $t$).*
+*   **Definition of a Residual Network (רשת שיורית):**
+    Given a flow network $G = (V, E)$ with capacity $c$ and a flow $f$, the **residual network** $G_f = (V, E_f)$ induced by $f$ represents the network's remaining capacities. The edge set $E_f$ consists of edges with positive residual capacities:
+    $$E_f = \{ (u, v) \in V \times V \mid c_f(u, v) > 0 \}$$
+    where the residual capacity $c_f(u, v)$ is defined as:
+    $$c_f(u, v) = \begin{cases} c(u, v) - f(u, v) & \text{if } (u, v) \in E \\ f(v, u) & \text{if } (v, u) \in E \\ 0 & \text{otherwise} \end{cases}$$
+    *(Intuitively, forward edges allow pushing additional flow, while backward edges allow decreasing/canceling existing flow).*
+*   **Definition of an Augmenting Path in Flow (מסלול שיפור):**
+    An **augmenting path** in the residual network $G_f$ is a simple directed path $P$ from the source $s$ to the sink $t$. The bottleneck capacity (or residual capacity) of $P$ is:
+    $$c_f(P) = \min_{(u, v) \in P} c_f(u, v) > 0$$
+
 
 
 *   **Lemma 1: Net Flow Across a Cut**
@@ -755,7 +765,46 @@ Suppose you are given a directed flow network $G = (V, E)$ with strictly integer
     *   If $S_f \cup T_f \neq V$, there exists some vertex $v \notin S_f \cup T_f$. We can construct at least two distinct minimum cuts: $(S_f, V \setminus S_f)$ and $(V \setminus T_f, T_f)$. Since $v \notin S_f$ and $v \in V \setminus T_f$, these cuts are distinct, confirming the min-cut is not unique.
 *   **Complexity:** Dominated by the initial max flow computation: **$O(|V|^2 |E|)$** time (using Dinic's), plus $O(|V| + |E|)$ for the reachability scans.
 
+#### 8.4 Submodularity of Cut Capacities & Min-Cut Unions
+*   **Definition (Submodularity):** Let $G = (V, E)$ be a flow network. For any two subsets of vertices $S, S' \subseteq V$, let $c(S)$ denote the capacity of the cut $(S, V \setminus S)$. The cut capacity function is **submodular**, meaning it satisfies:
+    $$c(S \cup S') + c(S \cap S') \le c(S) + c(S')$$
+*   **Rigorous Proof of Submodularity:**
+    1. Divide the vertex set $V$ into 4 disjoint regions based on membership in $S$ and $S'$:
+       - $A = S \cap S'$ (in both)
+       - $B = S \setminus S'$ (in $S$ only)
+       - $C = S' \setminus S$ (in $S'$ only)
+       - $D = V \setminus (S \cup S')$ (in neither)
+    2. Any directed edge capacity $c(X, Y)$ represents the sum of capacities of edges starting in region $X$ and ending in region $Y$. We can write the capacity of each cut in terms of these regions:
+       - $c(S)$ (edges leaving $S = A \cup B$):
+         $$c(S) = c(A, C) + c(A, D) + c(B, C) + c(B, D)$$
+       - $c(S')$ (edges leaving $S' = A \cup C$):
+         $$c(S') = c(A, B) + c(A, D) + c(C, B) + c(C, D)$$
+       - $c(S \cup S')$ (edges leaving $S \cup S' = A \cup B \cup C$):
+         $$c(S \cup S') = c(A, D) + c(B, D) + c(C, D)$$
+       - $c(S \cap S')$ (edges leaving $S \cap S' = A$):
+         $$c(S \cap S') = c(A, B) + c(A, C) + c(A, D)$$
+    3. Summing the capacities:
+       - $c(S) + c(S') = 2c(A, D) + c(A, C) + c(A, B) + c(B, D) + c(C, D) + c(B, C) + c(C, B)$
+       - $c(S \cup S') + c(S \cap S') = 2c(A, D) + c(A, B) + c(A, C) + c(B, D) + c(C, D)$
+    4. Subtracting the two sums:
+       $$(c(S) + c(S')) - (c(S \cup S') + c(S \cap S')) = c(B, C) + c(C, B)$$
+    5. Since all edge capacities are non-negative, $c(B, C) \ge 0$ and $c(C, B) \ge 0$. Thus:
+       $$c(S \cup S') + c(S \cap S') \le c(S) + c(S') \quad \blacksquare$$
+*   **Application (Union & Intersection of Minimum Cuts):**
+    *   *Problem:* Prove that if $(S, T)$ and $(S', T')$ are two minimum $(s,t)$-cuts, then $(S \cup S', T \cap T')$ is also a minimum $(s,t)$-cut.
+    *   *Proof:*
+        1. Since $(S, T)$ and $(S', T')$ are minimum cuts, their capacity is exactly the max flow value: $c(S) = c(S') = |f^*|$.
+        2. Since $s \in S$ and $s \in S'$, we have $s \in S \cap S'$ and $s \in S \cup S'$. Similarly, since $t \notin S$ and $t \notin S'$, we have $t \notin S \cap S'$ and $t \notin S \cup S'$. Thus, both $S \cap S'$ and $S \cup S$ define valid $(s,t)$-cuts.
+        3. By Weak Duality, any valid $(s,t)$-cut must have capacity at least $|f^*|$:
+           $$c(S \cap S') \ge |f^*| \quad \text{and} \quad c(S \cup S') \ge |f^*|$$
+        4. By submodularity:
+           $$c(S \cup S') + c(S \cap S') \le c(S) + c(S') = |f^*| + |f^*| = 2|f^*|$$
+        5. Since the sum of $c(S \cup S')$ and $c(S \cap S')$ is at most $2|f^*|$, and both are individually at least $|f^*|$, they must both be exactly equal to $|f^*|$:
+           $$c(S \cup S') = |f^*| \quad \text{and} \quad c(S \cap S') = |f^*|$$
+        6. Thus, $(S \cup S', T \cap T')$ is indeed a minimum $(s,t)$-cut. $\blacksquare$
+
 ### 9. Flow and Matching Complexity Matrix
+
 
 |**Algorithm Primitive**|**Input Parameter Conditions**|**Time Complexity**|**Space Complexity**|
 |---|---|---|---|

@@ -36,6 +36,17 @@ In past exams, you are frequently required to bound how far a randomized algorit
 
 ---
 
+### 1.1 Definition: With High Probability (W.H.P. / בהסתברות גבוהה)
+In the asymptotic analysis of randomized algorithms, an event $A_n$ (whose definition depends on the input size $n$) is said to occur **with high probability** (W.H.P.) if its probability approaches 1 as $n$ grows. Formally, we define it as:
+$$\Pr(A_n) \ge 1 - \frac{O(1)}{n^c}$$
+for any chosen constant $c \ge 1$ (or for some constant $c \ge 1$, depending on context).
+
+*   **Failure Bounding:** Equivalently, the failure probability is polynomially small: $\Pr(\text{Failure}) \le \frac{1}{n^c}$ for some constant $c \ge 1$.
+*   **The Union Bound Connection:** This definition is chosen because of its robustness under polynomial union bounds. If we have $k = n^d$ distinct events (where $d$ is a constant), and each fails with probability at most $1/n^c$, the probability that *any* of them fails is bounded by:
+    $$\Pr\left(\bigcup_{i=1}^{n^d} \text{Failure}_i\right) \le \sum_{i=1}^{n^d} \Pr(\text{Failure}_i) \le n^d \cdot \frac{1}{n^c} = \frac{1}{n^{c-d}}$$
+    By choosing the constant $c > d$, the overall failure probability remains polynomially small ($O(1/n^{c-d})$). Thus, the algorithm succeeds across all $n^d$ operations with high probability.
+
+
 ### 2. The Proof Technique: The Moment Generating Method
 
 The core trick behind proving any variation of the Chernoff bound is applying Markov's inequality to an exponential transformation of the random variable, introducing a positive scaling parameter $s > 0$.

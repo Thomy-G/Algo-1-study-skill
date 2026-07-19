@@ -47,7 +47,34 @@ $$X_{ij} = I\{\text{Event } A\} = \begin{cases} 1 & \text{if Event } A \text{ oc
     4.  Otherwise, discard the partition, select a new random pivot, and repeat the trial.
 *   **Complexity Invariant:** Since we discard any pivot that does not produce a $25\% - 75\%$ balance, the recursion tree depth is strictly bounded by $\log_{4/3} n = O(\log n)$. The expected number of pivot selection trials per level is a constant $O(1)$, which guarantees an expected runtime of **$O(n \log n)$** with high probability.
 
+#### 1.4 The Coupon Collector's / Gift-Buying Problem (בעיית אספן הקופונים / קניית מתנות) `[Seen in: Class Lectures & Recitations]`
+*   **Problem Statement:** There are $n$ different types of coupons (or gifts). In each round, we buy a coupon chosen uniformly at random from the $n$ types. What is the expected number of coupons we need to buy to collect at least one of each type? What is its high-probability tail concentration?
+*   **1. Expected Value Analysis:**
+    *   Let $X$ be the random variable representing the total number of coupons bought to collect all $n$ types.
+    *   We partition the process into phases: let $X_i$ be the number of coupons bought to collect the $i$-th new type, after we have already collected $i-1$ distinct types.
+    *   Clearly, the total number of coupons is $X = \sum_{i=1}^n X_i$.
+    *   When we already have $i-1$ types, there are $n - (i-1) = n - i + 1$ remaining uncollected types.
+    *   The probability of collecting a new type in any single trial is $p_i = \frac{n - i + 1}{n}$.
+    *   Since each trial is independent, $X_i$ is a geometric random variable with parameter $p_i$, so its expectation is:
+        $$E[X_i] = \frac{1}{p_i} = \frac{n}{n - i + 1}$$
+    *   By linearity of expectation (which holds regardless of dependencies):
+        $$E[X] = E\left[ \sum_{i=1}^n X_i \right] = \sum_{i=1}^n E[X_i] = \sum_{i=1}^n \frac{n}{n - i + 1}$$
+        $$E[X] = n \left( \frac{1}{n} + \frac{1}{n-1} + \dots + \frac{1}{1} \right) = n \sum_{j=1}^n \frac{1}{j} = n H_n$$
+        where $H_n$ is the $n$-th Harmonic number. Using the approximation $H_n \approx \ln n + \gamma$, the expected number of trials is:
+        $$E[X] = \mathbf{\Theta(n \log n)}$$
+*   **2. High-Probability Upper Tail Bound (Union Bound Proof):**
+    *   What is the probability that we need more than $M = (c+1)n \ln n$ coupons to collect all types?
+    *   Let $A_j$ be the event that coupon type $j$ was *not* chosen in the first $M$ trials.
+    *   For a single type $j$, since each trial is independent:
+        $$\Pr(A_j) = \left( 1 - \frac{1}{n} \right)^M \le e^{-M / n}$$
+    *   Substitute $M = (c+1)n \ln n$:
+        $$\Pr(A_j) \le e^{-(c+1)\ln n} = n^{-(c+1)} = \frac{1}{n^{c+1}}$$
+    *   By the **Union Bound**, the probability that *any* coupon remains uncollected after $M$ trials is:
+        $$\Pr(X > M) = \Pr\left( \bigcup_{j=1}^n A_j \right) \le \sum_{j=1}^n \Pr(A_j) \le n \cdot \frac{1}{n^{c+1}} = \mathbf{\frac{1}{n^c}}$$
+    *   Thus, we collect all coupons in $O(n \log n)$ steps **with high probability** ($1 - 1/n^c$).
+
 ### 2. Universal Hashing Primitives
+
 
 Simple Uniform Hashing (SUHA) is an idealized abstraction. To guarantee constant expected time $O(1)$ per operation without relying on uniform distribution assumptions, we use a **Universal Family of Hash Functions**.
 
@@ -148,20 +175,34 @@ Substituting this back yields $\sum_{i=0}^{n-1} O(1) = \mathbf{O(n)}$.
 
 #### 3.3 Randomized Sort & Selection (מיון ובחירה אקראיים)
 
-##### Randomized QuickSort (מיון מהיר אקראי)
+##### 1. How QuickSort Works (Divide & Conquer)
+*   **Divide:** The array $A[p \dots r]$ is partitioned into two (possibly empty) subarrays $A[p \dots q-1]$ and $A[q+1 \dots r]$ such that each element in $A[p \dots q-1]$ is less than or equal to $A[q]$ (the pivot), and each element in $A[q+1 \dots r]$ is greater than or equal to $A[q]$. The index $q$ is computed as part of this partitioning process.
+*   **Conquer:** The two subarrays $A[p \dots q-1]$ and $A[q+1 \dots r]$ are sorted by recursive calls to QuickSort.
+*   **Combine:** Because the subarrays are sorted in place, no work is needed to combine them: the entire array $A[p \dots r]$ is now sorted.
+
+##### 2. How the Partition Procedure Works (Lomuto Partition)
+The `PARTITION(A, p, r)` algorithm selects the last element of the subarray, $x = A[r]$, as the **pivot** around which to partition the subarray $A[p \dots r]$. As the algorithm runs, it partitions the array into four regions:
+1.  **Region 1 ($A[p \dots i]$):** Elements that are less than or equal to the pivot $x$.
+2.  **Region 2 ($A[i+1 \dots j-1]$):** Elements that are strictly greater than the pivot $x$.
+3.  **Region 3 ($A[j \dots r-1]$):** Elements that are currently unexamined.
+4.  **Region 4 ($A[r]$):** The pivot element itself.
+
+*   **Pointers and Flow:**
+    *   Pointer $i$ marks the boundary of the elements less than or equal to the pivot (initialized to $p-1$).
+    *   Pointer $j$ acts as the scanner that moves from $p$ to $r-1$.
+    *   Whenever an element $A[j] \le x$ is encountered, pointer $i$ is incremented, and $A[i]$ is swapped with $A[j]$, placing the smaller element into Region 1.
+    *   After the loop finishes, the pivot $A[r]$ is swapped with $A[i+1]$, placing the pivot exactly between the two partitions.
+    *   The index $i+1$ is returned as the final sorted position $q$ of the pivot.
+
+##### 3. Randomized QuickSort (מיון מהיר אקראי)
 Avoids the $O(n^2)$ worst-case performance of standard QuickSort on pre-sorted arrays by selecting a pivot uniformly at random, guaranteeing an expected runtime of $O(n \log n)$.
 
 ```plaintext
-RANDOMIZED-QUICKSORT(A, p, r):
+QUICKSORT(A, p, r):
     if p < r:
-        q = RANDOMIZED-PARTITION(A, p, r)
-        RANDOMIZED-QUICKSORT(A, p, q - 1)
-        RANDOMIZED-QUICKSORT(A, q + 1, r)
-
-RANDOMIZED-PARTITION(A, p, r):
-    i = RANDOM(p, r)
-    swap A[r] with A[i]
-    return PARTITION(A, p, r)
+        q = PARTITION(A, p, r)
+        QUICKSORT(A, p, q - 1)
+        QUICKSORT(A, q + 1, r)
 
 PARTITION(A, p, r):
     x = A[r]
@@ -172,6 +213,17 @@ PARTITION(A, p, r):
             swap A[i] with A[j]
     swap A[i+1] with A[r]
     return i + 1
+
+RANDOMIZED-QUICKSORT(A, p, r):
+    if p < r:
+        q = RANDOMIZED-PARTITION(A, p, r)
+        RANDOMIZED-QUICKSORT(A, p, q - 1)
+        RANDOMIZED-QUICKSORT(A, q + 1, r)
+
+RANDOMIZED-PARTITION(A, p, r):
+    i = RANDOM(p, r)
+    swap A[r] with A[i]
+    return PARTITION(A, p, r)
 ```
 
 ##### Mathematical Proof of Expected $O(n \log n)$ Comparisons:

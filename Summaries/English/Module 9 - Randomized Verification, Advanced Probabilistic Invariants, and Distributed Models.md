@@ -352,6 +352,17 @@ In distributed computing models, processors sit at the vertices of a graph netwo
 - **Synchronous Networks (מודל סינכרוני):** Execution proceeds in discrete, global _Rounds_. In each round, every node reads all incoming messages received from the previous round, performs local computations, and sends outbound messages to its neighbors.
     
 - **Asynchronous Networks (מודל אסינכרוני):** Messages experience arbitrary, unpredictable transmission delays. Processing is entirely event-driven, triggered immediately upon message delivery.
+
+##### The LOCAL Model of Distributed Computation (מודל ה-LOCAL)
+The **LOCAL model** is the standard distributed computational model used to study the spatial limits of local information in network graphs:
+*   **The Network Graph:** The network is represented as an undirected graph $G = (V, E)$ where $|V| = n$. Vertices represent processors (each executing the same algorithm in parallel), and edges represent bidirectional communication links.
+*   **Synchronous Rounds:** Execution proceeds in discrete, synchronous communication rounds. In each round, every node:
+    1. Performs arbitrary local computation (local processing time/memory is considered free).
+    2. Sends messages of **unlimited size** to all its neighbors.
+    3. Receives messages sent by its neighbors in that round.
+*   **Complexity Metric:** The time complexity is measured strictly as the **number of rounds** until all nodes terminate and output their results.
+*   **Information Flow:** In $r$ rounds of the LOCAL model, a node $v$ can gather all topological information within its $r$-hop neighborhood (its radius-$r$ ball). Thus, any LOCAL algorithm running in $r$ rounds is equivalent to each node independently making a decision based on its local $r$-neighborhood.
+
     
 
 #### 4.2 The Distributed Symmetry Breaking Paradigm
@@ -461,6 +472,17 @@ DISTRIBUTED-2DELTA-COLORING(v):
     6.  We need at most $\log_{4/3} n + 1$ good iterations to color all nodes. The expected number of rounds to get a good iteration is $\le 3$ (geometric expectation).
     7.  By linearity of expectation, the expected total rounds is:
         $$E[\text{rounds}] \le 3 \cdot (\log_{4/3} n + 1) = \mathbf{O(\log n)}$$
+    8.  **Proof of High Probability of Termination:**
+        *   Let $n_i$ be the number of uncolored vertices after $i$ rounds.
+        *   In any round, a vertex is not colored with probability at most $1/2 \implies \Pr(v \in V_i) \le (1/2)^i$.
+        *   By linearity of expectation, the expected number of uncolored vertices after $i$ rounds is:
+            $$E[n_i] = \sum_{v \in V} \Pr(v \in V_i) \le \frac{n_0}{2^i}$$
+        *   Choose $i = c \log_2 n_0$ rounds for a constant $c \ge 2$:
+            $$E[n_{c \log_2 n_0}] \le \frac{n_0}{2^{c \log_2 n_0}} = \frac{n_0}{n_0^c} = \frac{1}{n_0^{c-1}}$$
+        *   By Markov's Inequality, the probability that the algorithm has *not* terminated after $c \log_2 n_0$ rounds is:
+            $$\Pr(n_{c \log_2 n_0} \ge 1) \le \frac{E[n_{c \log_2 n_0}]}{1} \le \frac{1}{n_0^{c-1}}$$
+        *   Thus, the algorithm terminates in $O(\log n)$ rounds **with high probability** (at least $1 - 1/n^{c-1}$ for $c \ge 2$). $\blacksquare$
+
 
 #### 4.5 Distributed Symmetry Breaking via Polynomial ID Ranges `[Seen in: Recitations & Homeworks]`
 *   **The Anonymous ID Assignment Problem:** In distributed networks where nodes initially lack unique identifiers (anonymous graphs), nodes must assign themselves unique IDs from a range $\{1, \dots, R\}$ to initialize routing protocols. 
@@ -556,14 +578,63 @@ Suppose you distribute $n$ independent software tasks uniformly at random across
     *   Each iteration takes $O(k) = O(\log(j - i))$ coin flips.
     *   Total expected runtime: $\mathbf{O(\log(j - i))}$ time.
 
-##### 3. The Secretary Problem: Hiring Exactly 2 Candidates `[Seen in: Homeworks]`
-*   **Problem:** In the classic secretary hiring problem with $n$ candidates (where a candidate is hired if and only if they are better than all previously seen candidates), what is the probability that exactly 2 candidates are hired?
+##### 3. The Secretary Problem & Hiring Variants `[Seen in: Class Lectures, Homeworks, & 2025 Summer Moed B]`
+*   **Core Setting:** $n$ candidates arrive in a uniformly random order (each of the $n!$ permutations is equally likely). Candidates have distinct, comparable ranks.
+
+###### Variant A: Classic Online Secretary Problem (Optimal Stopping)
+*   **Problem:** We interview candidates one by one. After each interview, we must immediately decide whether to hire or reject them. Rejections are permanent. We want to maximize the probability of hiring the single best candidate.
+*   **The Threshold Strategy:**
+    1. Interview and reject the first $k$ candidates.
+    2. Let the best candidate seen so far (in the first $k$) have score $M$.
+    3. Interview subsequent candidates $i = k+1 \dots n$. Hire the first candidate who is better than $M$.
+*   **Optimal Threshold Derivation:**
+    *   Let $S$ be the event that we hire the best candidate (rank $n$). Condition on the position $i$ of the best candidate:
+        $$\Pr(S) = \sum_{i=1}^n \Pr(\text{best at } i) \cdot \Pr(\text{hired} \mid \text{best at } i)$$
+    *   Clearly, $\Pr(\text{best at } i) = 1/n$.
+    *   If $i \le k$, the best candidate is rejected $\implies \Pr(\text{hired} \mid \text{best at } i) = 0$.
+    *   If $i > k$, the best candidate is hired if and only if the best candidate among the first $i-1$ is located in the first $k$ candidates (otherwise, we would have hired some candidate before index $i$). The probability of this is $\frac{k}{i-1}$.
+    *   Thus:
+        $$\Pr(S) = \sum_{i=k+1}^n \frac{1}{n} \cdot \frac{k}{i-1} = \frac{k}{n} \sum_{j=k}^{n-1} \frac{1}{j}$$
+    *   Approximating the sum as an integral:
+        $$\Pr(S) \approx \frac{k}{n} \int_{k}^n \frac{1}{x} dx = \frac{k}{n} \ln\left(\frac{n}{k}\right) = - x \ln x \quad \left(\text{where } x = \frac{k}{n}\right)$$
+    *   Differentiating with respect to $x$ and setting to 0:
+        $$\frac{d}{dx} (-x \ln x) = -1 - \ln x = 0 \implies x = \frac{1}{e} \implies k = \frac{n}{e}$$
+    *   Thus, the optimal threshold is $k = n/e$, yielding a success probability of $\mathbf{1/e \approx 37\%}$.
+
+###### Variant B: Expected Replacements (1 Worker)
+*   **Problem:** We hire the first candidate. For every subsequent candidate, if they are better than the currently hired worker, we replace the worker. What is the expected number of replacements?
 *   **Analysis:**
-    *   Let the candidates be a random permutation of $\{1, \dots, n\}$. The first candidate (index 1) is always hired.
-    *   The number of hired candidates is equal to the number of left-to-right maxima in the permutation.
-    *   The number of permutations of size $n$ with exactly 2 left-to-right maxima is given by the Stirling cycle number $\left[ \begin{array}{c} n \\ 2 \end{array} \right] = (n-1)! \sum_{j=1}^{n-1} \frac{1}{j} = (n-1)! H_{n-1}$, where $H_{n-1}$ is the $(n-1)$-th Harmonic number.
-    *   The probability is:
-        $$\Pr(\text{Exactly 2 hired}) = \frac{(n-1)! H_{n-1}}{n!} = \mathbf{\frac{H_{n-1}}{n}}$$
+    *   Let $X_i$ be the indicator variable that candidate $i$ (for $i \ge 2$) is hired.
+    *   Candidate $i$ is hired if and only if they are the best among the first $i$ candidates seen.
+    *   Since candidates arrive in random order, any of the first $i$ candidates is equally likely to be the best, so $\Pr(X_i = 1) = 1/i$.
+    *   By Linearity of Expectation, the expected number of replacements is:
+        $$E[R] = \sum_{i=2}^n E[X_i] = \sum_{i=2}^n \frac{1}{i} = \mathbf{H_n - 1}$$
+
+###### Variant C: Expected Replacements ($K$ Workers)
+*   **Problem:** We maintain exactly $K$ workers. The first $K$ candidates fill the vacancies. Every subsequent candidate is hired (replacing the worst of the $K$ currently hired) if and only if they are better than at least one of the $K$ currently hired workers. What is the expected number of replacements?
+*   **Analysis:**
+    *   Let $X_i$ be the indicator variable that candidate $i$ (for $i > K$) is hired.
+    *   At step $i$, the $K$ currently hired workers are exactly the top $K$ candidates among the first $i-1$ candidates seen.
+    *   Therefore, candidate $i$ is hired if and only if they rank in the top $K$ among the first $i$ candidates seen.
+    *   Since all permutations are equally likely, the probability that the $i$-th candidate is in the top $K$ of the first $i$ elements is exactly $\Pr(X_i = 1) = \frac{K}{i}$.
+    *   By Linearity of Expectation, the expected number of replacements is:
+        $$E[R] = \sum_{i=K+1}^n E[X_i] = \sum_{i=K+1}^n \frac{K}{i} = K \sum_{i=K+1}^n \frac{1}{i} = \mathbf{K(H_n - H_K)}$$
+
+###### Variant D: Probability of Hiring Exactly 2 Candidates
+*   **Problem:** Under the 1-worker replacement rule, what is the probability that exactly 2 candidates are hired?
+*   **Elementary Conditioning Proof:**
+    *   The first candidate is always hired. For exactly 2 to be hired, the absolute best candidate (rank $n$) must arrive at some index $i > 1$.
+    *   All candidates arriving between index 2 and $i-1$ must be worse than candidate 1 (otherwise, at least one would be hired, yielding $\ge 3$ hires). This means the maximum of the first $i-1$ candidates is at index 1.
+    *   Condition on the position $i$ of the best candidate:
+        $$\Pr(\text{Exactly 2 hired}) = \sum_{i=2}^n \Pr(\text{best at } i) \cdot \Pr(\text{max of first } i-1 \text{ at index 1}) = \sum_{i=2}^n \frac{1}{n} \cdot \frac{1}{i-1} = \mathbf{\frac{H_{n-1}}{n}}$$
+*   **Combinatorial Proof (Stirling Numbers of the First Kind):**
+    *   The number of hires is equal to the number of left-to-right maxima in a random permutation.
+    *   The number of permutations of size $n$ with exactly 2 left-to-right maxima is given by the unsigned Stirling cycle number $\left[ \begin{array}{c} n \\ 2 \end{array} \right] = (n-1)! H_{n-1}$.
+    *   Dividing by $n!$, the probability is:
+        $$\Pr(\text{Exactly 2 hired}) = \frac{\left[ \begin{array}{c} n \\ 2 \end{array} \right]}{n!} = \frac{(n-1)! H_{n-1}}{n!} = \mathbf{\frac{H_{n-1}}{n}}$$
+
+
+
 
 ##### 4. Simulating a Fair Coin Using a Biased Coin (von Neumann's Trick) `[Seen in: Homeworks]`
 *   **Problem:** Given a biased coin with unknown probability of heads $p$ ($0 < p < 1$), simulate a fair coin `Rand()`.

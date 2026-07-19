@@ -172,7 +172,20 @@ $$
 *Prove that the union/intersection cut is also a min cut.*
 
 *Write your answer here:*
+A minimum cut s - t is defined as a cut where the source node is in S and the terminal node is in T where also there is a minimum of edges crossing from S to T, T = V/S, 
 
+$$
+\displaylines{
+s \in S \land s \in S' \implies s \in S \cup S'\\
+t \in T \land t \in T' \implies t \in T \cap T'\\
+V / (S\cup S') = (V / S) \cap (V / S') = T \cap T'\\
+\text{The definition of the capacity of a cut is:}\\
+c(S,T) = \sum_{u \in S, v \in T} c(u,v)\\
+c(S,T) = c(S', T')\\
+\text{Assume the cuts don't have the same vertices, if they did the new cut would trivially be minimum cut}\\
+
+}
+$$
 
 ---
 
@@ -181,7 +194,8 @@ $$
 ### Part a) [5 Points]
 *Prove that Tail_Quicksort correctly sorts.*
 
-*Write your answer here:*
+
+Tail quicksort is equivalent to choosing a bad pivot in the standard quicksort 
 
 
 ---

@@ -16,7 +16,7 @@ Let $G=(V,E)$ be a flow network with a source $s$, sink $t$, positive edge capac
 
 ## Question 2: Shortest Paths with Even Number of Edges (20 Points)
 
-Let $G=(V,E)$ be a directed weighted graph with an edge weight function $w: E ightarrow \mathbb{R}$. We are guaranteed that $G$ contains **no negative cycles**.
+Let $G=(V,E)$ be a directed weighted graph with an edge weight function $w: E \rightarrow \mathbb{R}$. We are guaranteed that $G$ contains **no negative cycles**.
 
 *   **Your Task:** Describe an algorithm that finds, for every vertex $v \in V$, the weight of the shortest path starting from $v$ to all other vertices that contains an **even number of edges**. Prove the correctness of your algorithm and analyze its runtime complexity.
 
@@ -25,8 +25,8 @@ Let $G=(V,E)$ be a directed weighted graph with an edge weight function $w: E i
 ## Question 3: Minimum Steps to Reach $n$ (20 Points)
 
 Starting from the number 1, we want to reach a given target integer $n$ in the minimum number of steps. In each step, we can perform one of the following operations:
-1. Add 1 to the current number ($x ightarrow x + 1$).
-2. Multiply the current number by 2 ($x ightarrow 2x$).
+1. Add 1 to the current number ($x \rightarrow x + 1$).
+2. Multiply the current number by 2 ($x \rightarrow 2x$).
 
 *   **Your Task:** Describe an algorithm that takes $n$ as input and returns the minimum number of steps required to reach $n$. Analyze its runtime complexity and prove its correctness.
 
