@@ -78,8 +78,19 @@ $$
 
 ## Question 3 [20 Points]
 
-*Write your answer here:*
+We know that if we take this edge with the increased weight we will form 2 connected components, we will use bfs from each of the endpoints of the edge in the tree without that edge to find the vertices on each of the connected components, this will take $2O(|V|+|E|)$ but we know its really $O(|V|+|E|)$ after that we will arbitrarily create 2 inverse trees union finds that will take O(|V|) and the find will take O(1), after that we will go over the edges in the tree and use find to see if each of the endpoints are in different connected components and we will save the one with the lowest weight, after that we will use the one with the lowest weight to replace (if we find a different one ) the edge with increased weight, we know by the lemmas of MST that putting a new lightest edge between 2 MSTs in a forest will make a new MST.
+The time complexity will be O(|V|+|E|)
 
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Question 3 Score:</strong></td><td><strong style="color: #e65100;">14 / 20</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: #e65100;">
+    - <strong>Correct Core Logic:</strong> Removing the modified edge splits the MST into two components, and the new MST is formed by re-connecting them using the minimum-weight crossing edge (Cut Property).<br>
+    - <strong>Scan Bug (-4):</strong> You wrote "go over the edges in the tree" to find the min-weight replacement. The alternative crossing edges lie in G \ T, not in the tree itself. You must scan all edges in the original graph G.<br>
+    - <strong>Unnecessary Data Structure (-2):</strong> Using Union-Find here is overcomplicated. You can simply record vertex component IDs (e.g. 1 or 2) in a boolean array during the BFS/DFS, allowing O(1) membership checks without any overhead.
+  </td></tr>
+</table>
+</div>
 
 ---
 
@@ -103,7 +114,7 @@ $$
 | :--- | :--- | :--- | :--- | :--- |
 | **Q1** | Vertex Deletion in Flow Networks | **4** | 20 | Run Dinic's once, but greedy heuristic (heaviest edge endpoint deletion) is incorrect. |
 | **Q2** | Arithmetic Progressions via FFT | **18** | 20 | Excellent polynomial squaring and coefficient counting. Small typos in description. |
-| **Q3** | Dynamic MST Weight Increase | **0** | 20 | Unanswered |
+| **Q3** | Dynamic MST Weight Increase | **14** | 20 | Correct cut split logic, but scanned tree edges instead of graph edges. |
 | **Q4** | Universal Hashing Collision Bounds | **0** | 20 | Unanswered |
 | **Q5** | Linear Programming & Geometry | **0** | 20 | Unanswered |
-| **Total** | **Final Score** | **22** | **100** | **Grade: 22.0%** |
+| **Total** | **Final Score** | **36** | **100** | **Grade: 36.0%** |
