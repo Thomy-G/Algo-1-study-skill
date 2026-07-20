@@ -1,33 +1,27 @@
-# Algorithms 1 (89-220) - Theme: Linear Programming & Welzl's Algorithm
+# 📝 Practice Session - Linear Programming
 
-Welcome to the practice session on **Linear Programming & Welzl's Algorithm**. These topics are highly important in the curriculum but rarely appear in past exams.
-
----
-
-## Question 1: LP Formulations and Feasible Regions (30 Points)
-
-A factory produces two types of algorithms: **Dijkstra-Bots** ($x_1$) and **FFT-Bots** ($x_2$). 
-*   Producing one Dijkstra-Bot requires 2 units of RAM and 1 unit of CPU.
-*   Producing one FFT-Bot requires 1 unit of RAM and 3 units of CPU.
-*   The factory has a daily limit of 8 units of RAM and 9 units of CPU.
-*   The profit from selling one Dijkstra-Bot is 30 NIS, and from selling one FFT-Bot is 40 NIS.
-
-*   **a) [10 Points]** Formulate this problem as a Linear Program (LP) in **standard maximization form** (define the variables, objective function, and constraints).
-*   **b) [10 Points]** Draw the feasible region in the $(x_1, x_2)$ plane. Find all the vertices (extreme points) of the feasible region.
-*   **c) [10 Points]** Find the optimal production plan $(x_1, x_2)$ that maximizes the daily profit, and calculate the maximum profit.
+Welcome to the practice session on **Linear Programming (LP) & Randomized Geometry**. Below are 3 questions covering LP formulations, dualities, Seidel's LP algorithm, and Welzl's Smallest Enclosing Disc algorithm.
 
 ---
 
-## Question 2: Seidel's Randomized LP Algorithm (35 Points)
+## Question 1 [30 Points]
 
-Let $HL$ be a set of $n$ linear constraints in $d$ dimensions, and let $c$ be the objective vector we wish to maximize. Seidel's algorithm solves this LP recursively.
-*   **a) [15 Points]** Describe the recursive step of Seidel's algorithm. Explain what happens when the randomly chosen constraint $h \in HL$ is violated by the optimal solution of the LP on $HL \setminus \{h\}$.
-*   **b) [20 Points]** Let $T(d, n)$ be the expected runtime of Seidel's algorithm in $d$ dimensions with $n$ constraints. Write the recurrence relation for $T(d, n)$ and prove that for a constant dimension $d$, the expected runtime is $O(n)$ (i.e. linear in the number of constraints).
+*   **a) [10 Points]** Formulate the Maximum Flow problem on a directed flow network $G = (V,E)$ with source $s$, sink $t$, and edge capacities $c(u,v) \ge 0$ as a Linear Program (LP) in standard maximization form.
+*   **b) [10 Points]** Formulate the Single-Source Shortest Paths (SSSP) problem from a source $s \in V$ on a directed graph $G = (V,E)$ with edge weights $w(u,v) \in \mathbb{R}$ (assuming no negative cycles) as a Linear Program (LP) in standard maximization form.
+*   **c) [10 Points]** Write the **dual** of the SSSP LP from part (b), and explain the physical or network interpretation of this dual LP.
 
 ---
 
-## Question 3: Welzl's Smallest Enclosing Disc (35 Points)
+## Question 2 [35 Points]
 
-Welzl's algorithm finds the Smallest Enclosing Disc (SED) of a set of $P$ points in $O(n)$ expected time.
-*   **a) [15 Points]** Explain the role of the support set (boundary set) $R$ in the recursive function `Welzl(P, R)`. What is the maximum size that $R$ can reach, and why?
-*   **b) [20 Points]** Prove that Welzl's algorithm runs in expected $O(n)$ time. Define the backward analysis technique and explain how it is used to bound the probability of entering the recursive step.
+*   **a) [10 Points]** Describe the incremental step of Seidel's randomized LP algorithm. Specifically, explain what happens when the $i$-th randomly chosen constraint $h_i$ is violated by the current optimal solution $x_{i-1}$, and how the problem is reduced to $d-1$ dimensions.
+*   **b) [15 Points]** Prove that the expected runtime of Seidel's algorithm is $O(d! \cdot n)$ using backwards analysis. Clearly formulate the recurrence relation and show the induction steps.
+*   **c) [10 Points]** Explain how the algorithm handles the base cases: (1) when $d=1$, and (2) when $n=0$. Specify their runtime complexities.
+
+---
+
+## Question 3 [35 Points]
+
+*   **a) [10 Points]** Describe Welzl's randomized recursive algorithm to find the smallest enclosing disc of a set of 2D points $P$, specifying the roles of the input sets $P$ (points) and $R$ (boundary support set).
+*   **b) [15 Points]** Prove that the expected runtime of Welzl's algorithm is $O(n)$ using backwards analysis. Formulate and solve the recurrence relation $T(n, i)$ for the expected time.
+*   **c) [10 Points]** Explain the concept of a **support set** (boundary points) of the smallest enclosing disc. Prove why the maximum size of the support set $R$ is 3, and explain how the disc is calculated in the base cases when $|R|=1, 2, 3$.

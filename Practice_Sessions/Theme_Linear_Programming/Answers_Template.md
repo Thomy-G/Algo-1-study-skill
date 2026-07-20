@@ -1,67 +1,59 @@
-# 📝 Theme: Linear Programming - Answers Sheet
+# 📝 Answers Sheet - Linear Programming
 
 Please write your answers in the designated placeholders below. When you are finished, type `Finished` or `Check my answers` in the chat to submit them for grading.
 
 ---
 
-## Question 1: LP Formulations and Feasible Regions (30 Points)
+## Question 1 [30 Points]
 
 ### Part a) [10 Points]
-*Formulate the LP in standard maximization form.*
-
-*Write your answer here:*
-
-
----
+I like big butts and I cannot lie linear
 
 ### Part b) [10 Points]
-*List the vertices of the feasible region.*
-
 *Write your answer here:*
-
-
----
 
 ### Part c) [10 Points]
-*Find the optimal solution and maximum profit.*
-
 *Write your answer here:*
-
 
 ---
 
-## Question 2: Seidel's Randomized LP Algorithm (35 Points)
+## Question 2 [35 Points]
 
-### Part a) [15 Points]
-*Describe Seidel's recursive step and constraint violation handling.*
-
+### Part a) [10 Points]
 *Write your answer here:*
 
+### Part b) [15 Points]
+*Write your answer here:*
+
+### Part c) [10 Points]
+*Write your answer here:*
 
 ---
 
-### Part b) [20 Points]
-*Write the recurrence relation and prove the O(n) expected runtime.*
+## Question 3 [35 Points]
 
+### Part a) [10 Points]
 *Write your answer here:*
 
+### Part b) [15 Points]
+*Write your answer here:*
+
+### Part c) [10 Points]
+*Write your answer here:*
 
 ---
 
-## Question 3: Welzl's Smallest Enclosing Disc (35 Points)
+## 📊 Exam Tally & Final Score
 
-### Part a) [15 Points]
-*Explain the support set R and why its size is bounded.*
-
-*Write your answer here:*
-
-
----
-
-### Part b) [20 Points]
-*Prove O(n) expected time using backward analysis.*
-
-*Write your answer here:*
-
-
----
+| Part / Question | Description | Score | Max Points | Feedback |
+| :--- | :--- | :--- | :--- | :--- |
+| **Q1a** | Max Flow LP formulation | **0** | 10 | Unanswered |
+| **Q1b** | SSSP LP formulation | **0** | 10 | Unanswered |
+| **Q1c** | SSSP Dual formulation & meaning | **0** | 10 | Unanswered |
+| **Q2a** | Seidel LP incremental step | **0** | 10 | Unanswered |
+| **Q2b** | Seidel LP expected complexity proof | **0** | 15 | Unanswered |
+| **Q2c** | Seidel LP base cases | **0** | 10 | Unanswered |
+| **Q3a** | Welzl's algorithm description | **0** | 10 | Unanswered |
+| **Q3b** | Welzl's expected complexity proof | **0** | 15 | Unanswered |
+| **Q3c** | Support set role & circumcircle math | **0** | 10 | Unanswered |
+| **Total** | **Final Score** | **0** | **100** | **Grade: 0.0%** |
